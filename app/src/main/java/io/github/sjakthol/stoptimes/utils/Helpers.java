@@ -13,6 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import io.github.sjakthol.stoptimes.R;
 
+import java.util.Locale;
+
 /**
  * A random collection of helper methods.
  */
@@ -85,15 +87,15 @@ public class Helpers {
     public static String formatDistance(double meters) {
         long rounded = Math.round(meters);
         if (rounded < 1000) {
-            return String.format("%dm", rounded);
+            return String.format(Locale.getDefault(), "%dm", rounded);
         }
 
         double km = meters / 1000.0;
         if (km < 1000) {
-            return String.format("%.1fkm", km);
+            return String.format(Locale.getDefault(), "%.1fkm", km);
         }
 
-        return String.format("%dkm", Math.round(km));
+        return String.format(Locale.getDefault(), "%dkm", Math.round(km));
     }
 
     /**

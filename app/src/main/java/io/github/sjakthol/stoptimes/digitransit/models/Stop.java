@@ -167,6 +167,8 @@ public class Stop {
             return R.string.stop_location_porvoo;
         } else if (getCode().startsWith("Ri")) {
             return R.string.stop_location_riihimaki;
+        } else if (getCode().startsWith("Si")) {
+            return R.string.stop_location_sipoo;
         } else if (getCode().startsWith("Tu")) {
             return R.string.stop_location_tuusula;
         } else {

@@ -3,8 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="io.github.sjakthol.stoptimes.activity.stoplist.StopListFragment"
-              android:scrollIndicators="end">
+              tools:context="io.github.sjakthol.stoptimes.activity.stoplist.StopListFragment">
     <android.support.v7.widget.RecyclerView
             android:id="@+id/stop_list_recycler"
             android:scrollbars="vertical"

@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -81,7 +82,7 @@ public class DigitransitApi {
         final int numDepartures,
         final DepartureResponseListener listener)
     {
-        String query = String.format(QUERY_DEPARTURES_TEMPLATE, stopId, numDepartures);
+        String query = String.format(Locale.US, QUERY_DEPARTURES_TEMPLATE, stopId, numDepartures);
         JSONObject body = buildGraphQLQuery(query, null);
 
         Logger.i(TAG, "Fetching %d departures for %s", numDepartures, stopId);
