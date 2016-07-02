@@ -15,7 +15,7 @@ public class GetFavoriteStopsTask extends QueryStopsDatabaseTask<Void> {
      *
      * @param dbHelper the database helper instance
      */
-    protected GetFavoriteStopsTask(StopListDatabaseHelper dbHelper) {
+    public GetFavoriteStopsTask(StopListDatabaseHelper dbHelper) {
         super(dbHelper);
     }
 

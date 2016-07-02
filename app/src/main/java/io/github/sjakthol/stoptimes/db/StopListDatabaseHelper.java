@@ -73,7 +73,8 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
      * @param context an application context to tie this database
      */
     public StopListDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        // In-memory db for tests
+        super(context, Helpers.isInJUnitTest() ? null : DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
 
@@ -101,7 +102,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
      *
      * @return an object that contains the stops in data.stops array.
      */
-    private JSONObject fetchStops() {
+    protected JSONObject fetchStops() {
         if (!Helpers.isConnected(mContext)) {
             Logger.w(TAG, "fetchStops() failed: no network connection available");
             throw new NetworkRequiredException();
