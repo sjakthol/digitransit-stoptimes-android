@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="hsl_tram">#00985F</color>
+    <color name="hsl_commuter_train">#8C4799</color>
+    <color name="hsl_bus">#007AC9</color>
+    <color name="hsl_subway">#FF6319</color>
+    <color name="departure_realtime">#4caf50</color>
+</resources>

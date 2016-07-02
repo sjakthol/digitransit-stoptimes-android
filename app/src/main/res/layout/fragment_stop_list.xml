@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="io.github.sjakthol.stoptimes.activity.stoplist.StopListFragment"
+              android:scrollIndicators="end">
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/stop_list_recycler"
+            android:scrollbars="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:visibility="gone"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/stop_list_empty" android:padding="16dp"
+            android:gravity="center_vertical|center_horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/stop_list_empty_title" android:padding="16dp"
+                android:layout_gravity="center_horizontal"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stop_list_empty_desc" android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+    </LinearLayout>
+</LinearLayout>

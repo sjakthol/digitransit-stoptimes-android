@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_cat_general"
+        android:key="pref_cat_general">
+        <CheckBoxPreference
+            android:key="@string/pref_key_use_location"
+            android:title="@string/pref_use_location_title"
+            android:summary="@string/pref_use_location_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/pref_cat_stoplist"
+            android:key="pref_cat_stoplist">
+        <EditTextPreference
+            android:key="@string/pref_key_stoplist_num_results"
+            android:defaultValue="20"
+            android:title="@string/pref_stoplist_num_results_title"
+            android:summary="@string/pref_stoplist_num_results_summary"
+            android:numeric="integer" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_cat_departures"
+        android:title="@string/pref_cat_departures">
+        <EditTextPreference
+                android:key="@string/pref_key_departures_num_results"
+                android:defaultValue="20"
+                android:title="@string/pref_num_departures_title"
+                android:summary="@string/pref_num_departures_summary"
+                android:numeric="integer" />
+    </PreferenceCategory>
+</PreferenceScreen>
