@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.BaseActivity;
@@ -17,6 +18,7 @@ import io.github.sjakthol.stoptimes.db.task.QueryStopsTask;
 import io.github.sjakthol.stoptimes.db.task.UpdateFavoriteStatusTask;
 import io.github.sjakthol.stoptimes.digitransit.models.Stop;
 import io.github.sjakthol.stoptimes.net.NetworkRequiredException;
+import io.github.sjakthol.stoptimes.net.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
@@ -65,6 +67,11 @@ public class StopListActivity
     private String mQueryString;
 
     /**
+     * True if the activity has been stopped.
+     */
+    private boolean mIsStopped;
+
+    /**
      * Creates a new activity and passes the correct container element to the parent class.
      */
     public StopListActivity() {
@@ -107,8 +114,7 @@ public class StopListActivity
 
         Logger.i(TAG, "onCreate(): qs='%s', source='%s'", mQueryString, mStopListSource);
 
-        // Always show loading screen since this could be first load
-        updateStopListFragment(true);
+        // List in initialized in onResume()
     }
 
     /**
@@ -131,6 +137,26 @@ public class StopListActivity
 
         outState.putString(BUNDLE_STOP_LIST_QUERY, mQueryString);
         outState.putSerializable(BUNDLE_STOP_LIST_SOURCE, mStopListSource);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Logger.d(TAG, "onResume()");
+
+        mIsStopped = false;
+
+        // Always show loading screen since this could be first load
+        updateStopListFragment(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.d(TAG, "onStop()");
+
+        mIsStopped = true;
+        VolleyWrapper.getInstance(this).getRequestQueue().cancelAll(this);
     }
 
     @Override
@@ -239,6 +265,11 @@ public class StopListActivity
     }
 
     private void handleDatabaseQueryTaskResult(AsyncTaskResult<Cursor> res) {
+        if (mIsStopped) {
+            Logger.w(TAG, "Ignoring database task result after onStop()");
+            return;
+        }
+
         if (res.isSuccess()) {
             Logger.i(TAG, "Task was successful. Showing stop list");
             StopListFragment frag = (StopListFragment) getFragment(FRAG_STOP_LIST);
