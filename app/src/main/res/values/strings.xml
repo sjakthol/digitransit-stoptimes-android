@@ -40,7 +40,6 @@
     <string name="stop_location_jarvenpaa">Järvenpää</string>
     <string name="stop_location_lahti">Lahti</string>
     <string name="stop_location_hyvinkaa">Hyvinkää</string>
-    <string name="stop_location_kauniainen">Kauniainen</string>
     <string name="stop_location_nurmijarvi">Nurmijärvi</string>
     <string name="stop_location_pornainen">Pornainen</string>
     <string name="stop_location_porvoo">Porvoo</string>
@@ -68,8 +67,9 @@
     <string name="distance_template">&#160; - %s</string>
     <string name="pref_key_stoplist_num_results">stoplist_num_results</string>
     <string name="pref_key_departures_num_results">num_departures</string>
-    <string name="departure_list_update_timeout">Departure update timed out.</string>
+    <string name="departure_list_update_timeout">Departure update timed out. Try again in a few moments.</string>
     <string name="departure_list_update_server_error">Departure update failed due to server error. Try again in a few
         moments.
     </string>
+    <string name="stop_location_kauniainen">Kauniainen</string>
 </resources>
