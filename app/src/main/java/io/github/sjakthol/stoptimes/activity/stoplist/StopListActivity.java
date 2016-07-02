@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.BaseActivity;

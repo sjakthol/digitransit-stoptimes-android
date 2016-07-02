@@ -1,6 +1,5 @@
 package io.github.sjakthol.stoptimes.digitransit.models;
 
-import android.location.Location;
 import io.github.sjakthol.stoptimes.R;
 import org.junit.Test;
 

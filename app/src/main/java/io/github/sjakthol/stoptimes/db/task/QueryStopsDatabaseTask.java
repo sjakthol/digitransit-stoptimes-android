@@ -13,7 +13,7 @@ abstract class QueryStopsDatabaseTask<T> extends DatabaseTask<T, Cursor> {
      * The list of columns all stop queries should return
      */
     static final String[] STOP_QUERY_COLUMNS = {
-        StopListContract.Stop._ID,
+        "stops._rowid_ as " + StopListContract.Stop._ID,
         StopListContract.Stop.COLUMN_NAME_GTFS_ID,
         StopListContract.Stop.COLUMN_NAME_NAME,
         StopListContract.Stop.COLUMN_NAME_CODE,

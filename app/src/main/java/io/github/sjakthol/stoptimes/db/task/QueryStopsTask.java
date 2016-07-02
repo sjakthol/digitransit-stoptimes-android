@@ -30,8 +30,8 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<String> {
 
     private static final String SQL_QUERY_STOPS =
         "SELECT " + TextUtils.join(", ", STOP_QUERY_COLUMNS) +
-        " FROM " + StopListContract.Stop.TABLE_NAME +
-
+        " FROM " + StopListContract.Stop.STOPS_TABLE_NAME +
+        " NATURAL LEFT JOIN " + StopListContract.Stop.FAVORITES_TABLE_NAME +
         " WHERE " + StopListContract.Stop.COLUMN_NAME_NAME + " LIKE ?" +
         " ORDER BY " + StopListContract.Stop.COLUMN_NAME_NAME +
         " LIMIT %s";

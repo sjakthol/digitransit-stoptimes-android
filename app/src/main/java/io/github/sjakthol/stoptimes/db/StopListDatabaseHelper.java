@@ -30,21 +30,27 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     private static final String REAL_TYPE = " REAL";
     private static final String INT_TYPE = " INTEGER";
     private static final String COMMA_SEP = ", ";
-    private static final String SQL_CREATE_TABLE =
-        "CREATE TABLE " + StopListContract.Stop.TABLE_NAME + " (" +
-            StopListContract.Stop._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + COMMA_SEP +
+    private static final String SQL_CREATE_STOPS_TABLE =
+        "CREATE TABLE " + StopListContract.Stop.STOPS_TABLE_NAME + " (" +
+            StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_CODE + TEXT_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_LAT + REAL_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_LON + REAL_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE + INT_TYPE + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE + TEXT_TYPE + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_IS_FAVORITE + INT_TYPE + " DEFAULT 0" +
+            StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE + TEXT_TYPE +
+    " )";
+
+    private static final String SQL_CREATE_FAVORITES_TABLE =
+        "CREATE TABLE " + StopListContract.Stop.FAVORITES_TABLE_NAME + " (" +
+            StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
+            StopListContract.Stop.COLUMN_NAME_IS_FAVORITE + INT_TYPE + " DEFAULT 1" + COMMA_SEP +
+            " FOREIGN KEY(" + StopListContract.Stop.COLUMN_NAME_GTFS_ID + ") REFERENCES " +
+                StopListContract.Stop.STOPS_TABLE_NAME + "(" + StopListContract.Stop.COLUMN_NAME_GTFS_ID + ")" +
     " )";
 
     private static final String SQL_INSERT_STOP =
-        "INSERT INTO " + StopListContract.Stop.TABLE_NAME + " (" +
+        "INSERT INTO " + StopListContract.Stop.STOPS_TABLE_NAME + " (" +
             StopListContract.Stop.COLUMN_NAME_GTFS_ID + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_CODE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_NAME + COMMA_SEP +
@@ -54,7 +60,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
             StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + StopListContract.Stop.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + StopListContract.Stop.STOPS_TABLE_NAME;
 
     /**
      * An application context used to create the database.
@@ -74,7 +80,8 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) throws CreateFailedException {
         Logger.i(TAG, "Creating stop database");
-        db.execSQL(SQL_CREATE_TABLE);
+        db.execSQL(SQL_CREATE_STOPS_TABLE);
+        db.execSQL(SQL_CREATE_FAVORITES_TABLE);
 
         JSONObject response = this.fetchStops();
         this.populateDatabase(db, response);

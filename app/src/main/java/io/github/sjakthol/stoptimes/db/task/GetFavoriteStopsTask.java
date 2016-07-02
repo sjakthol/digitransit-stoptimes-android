@@ -2,6 +2,7 @@ package io.github.sjakthol.stoptimes.db.task;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.db.StopListContract;
 import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
 
@@ -18,17 +19,20 @@ public class GetFavoriteStopsTask extends QueryStopsDatabaseTask<Void> {
         super(dbHelper);
     }
 
+    private static final String GET_FAVORITES_SQL =
+        "SELECT " +
+            TextUtils.join(", ", STOP_QUERY_COLUMNS) +
+        " FROM " +
+            StopListContract.Stop.STOPS_TABLE_NAME +
+        " NATURAL INNER JOIN " +
+            StopListContract.Stop.FAVORITES_TABLE_NAME +
+        " ORDER BY " +
+            StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE + ", " +
+            StopListContract.Stop.COLUMN_NAME_NAME;
+
+
     @Override
     public Cursor runTask(SQLiteDatabase db, Void... params) {
-        return db.query(
-            StopListContract.Stop.TABLE_NAME, /* table */
-            STOP_QUERY_COLUMNS, /* Columns */
-            StopListContract.Stop.COLUMN_NAME_IS_FAVORITE + " = 1", /* Selection */
-            null, /* selectionArgs */
-            null, /* groupBy */
-            null, /* having */
-            StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE + ", " + StopListContract.Stop.COLUMN_NAME_NAME, /* order */
-            null /* limit */
-        );
+        return db.rawQuery(GET_FAVORITES_SQL, null);
     }
 }
