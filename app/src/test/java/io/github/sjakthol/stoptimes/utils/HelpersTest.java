@@ -1,12 +1,11 @@
-package io.github.sjakthol.stoptimes.activity.stoplist;
+package io.github.sjakthol.stoptimes.utils;
 
-import io.github.sjakthol.stoptimes.utils.Helpers;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
-public class StopListAdapterTest {
+public class HelpersTest {
     @Test
     public void test_formatDistance() throws Exception {
         assertThat(Helpers.formatDistance(12.323), is("12m"));
