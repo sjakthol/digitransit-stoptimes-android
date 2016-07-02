@@ -226,7 +226,7 @@ public class DepartureListActivity
         String key = getString(R.string.pref_key_departures_num_results);
         String limit = PreferenceManager
                 .getDefaultSharedPreferences(this)
-                .getString(key, "10");
+                .getString(key, "20");
 
         try {
             return Integer.valueOf(limit);
