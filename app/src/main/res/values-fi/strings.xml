@@ -63,4 +63,8 @@
         näet tämän virheen useita kertoja, jotain on pahasti vialla.
     </string>
     <string name="unexpected_error_title">Oho, jotain meni pieleen</string>
+    <string name="action_update">Päivitä pysäkkitiedot</string>
+    <string name="db_update_loading_message">Pysäkkitietoja päivitetään…</string>
+    <string name="settings">Asetukset</string>
+    <string name="stopdb_last_update">stopdb_last_update_timestamp</string>
 </resources>
