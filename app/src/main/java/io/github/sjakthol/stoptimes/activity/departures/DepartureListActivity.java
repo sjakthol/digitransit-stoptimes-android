@@ -16,7 +16,7 @@ import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
-import io.github.sjakthol.stoptimes.net.VolleyWrapper;
+import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 

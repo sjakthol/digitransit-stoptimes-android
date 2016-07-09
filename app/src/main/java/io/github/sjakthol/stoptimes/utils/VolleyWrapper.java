@@ -1,4 +1,4 @@
-package io.github.sjakthol.stoptimes.net;
+package io.github.sjakthol.stoptimes.utils;
 
 import android.content.Context;
 import com.android.volley.RequestQueue;

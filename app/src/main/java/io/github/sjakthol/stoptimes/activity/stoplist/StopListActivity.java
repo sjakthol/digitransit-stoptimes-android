@@ -16,8 +16,8 @@ import io.github.sjakthol.stoptimes.db.task.GetFavoriteStopsTask;
 import io.github.sjakthol.stoptimes.db.task.QueryStopsTask;
 import io.github.sjakthol.stoptimes.db.task.UpdateFavoriteStatusTask;
 import io.github.sjakthol.stoptimes.digitransit.models.Stop;
-import io.github.sjakthol.stoptimes.net.NetworkRequiredException;
-import io.github.sjakthol.stoptimes.net.VolleyWrapper;
+import io.github.sjakthol.stoptimes.utils.NetworkRequiredException;
+import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import io.github.sjakthol.stoptimes.utils.Logger;
 

@@ -1,4 +1,4 @@
-package io.github.sjakthol.stoptimes.net;
+package io.github.sjakthol.stoptimes.utils;
 
 /**
  * An execption thrown when network is required but not available.

@@ -7,7 +7,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
-import io.github.sjakthol.stoptimes.net.VolleyWrapper;
+import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -8,7 +8,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.toolbox.RequestFuture;
 import io.github.sjakthol.stoptimes.BuildConfig;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
-import io.github.sjakthol.stoptimes.net.NetworkRequiredException;
+import io.github.sjakthol.stoptimes.utils.NetworkRequiredException;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import org.json.JSONArray;
