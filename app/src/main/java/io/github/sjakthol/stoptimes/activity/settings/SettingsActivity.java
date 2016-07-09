@@ -7,21 +7,27 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import io.github.sjakthol.stoptimes.R;
+import io.github.sjakthol.stoptimes.activity.BaseActivity;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
 public class SettingsActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
                    ActivityCompat.OnRequestPermissionsResultCallback
 {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
+    public SettingsActivity() {
+        super(R.id.main_content);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_settings);
 
         // Display the fragment as the main content.
         replaceSettingsFragment();
@@ -45,8 +51,8 @@ public class SettingsActivity
      */
     private void replaceSettingsFragment() {
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
-                .commit();
+            .replace(R.id.main_content, new SettingsFragment())
+            .commit();
     }
 
     private void requestLocationPermissions() {

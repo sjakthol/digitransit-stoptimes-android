@@ -1,6 +1,9 @@
 package io.github.sjakthol.stoptimes.activity.update;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import io.github.sjakthol.stoptimes.R;
@@ -31,7 +34,6 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
         setContentView(R.layout.activity_stop_database_update);
 
         startUpdate();
-
     }
 
     private void showLoadingIndicator() {
@@ -51,6 +53,7 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
 
                 if (res.isSuccess()) {
                     Logger.i(TAG, "Update finished succesfully");
+                    setDbUpdateTimestamp();
                     finish();
                 } else {
                     Throwable err = res.getError();
@@ -64,6 +67,14 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
                 }
             }
         }.execute();
+    }
+
+    private void setDbUpdateTimestamp() {
+        String key = getString(R.string.stopdb_last_update);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(key, System.currentTimeMillis());
+        editor.apply();
     }
 
     @Override

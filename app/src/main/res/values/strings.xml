@@ -73,6 +73,8 @@
         moments.
     </string>
     <string name="stop_location_kauniainen">Kauniainen</string>
-    <string name="db_update_loading_message">Updating Stop Database...</string>
+    <string name="db_update_loading_message">Updating Stop Database…</string>
     <string name="action_update">Update Stop Database</string>
+    <string name="stopdb_last_update">stopdb_last_update_timestamp</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -1,7 +1,6 @@
 package io.github.sjakthol.stoptimes.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.settings.SettingsActivity;
+import io.github.sjakthol.stoptimes.activity.update.StopDatabaseUpdateActivity;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
@@ -60,6 +60,9 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_update:
+                startActivity(new Intent(this, StopDatabaseUpdateActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

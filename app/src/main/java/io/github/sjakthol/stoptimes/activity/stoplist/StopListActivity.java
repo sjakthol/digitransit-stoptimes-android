@@ -11,6 +11,7 @@ import io.github.sjakthol.stoptimes.activity.departures.DepartureListActivity;
 import io.github.sjakthol.stoptimes.activity.generic.LoadingFragment;
 import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
+import io.github.sjakthol.stoptimes.activity.update.StopDatabaseUpdateActivity;
 import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
 import io.github.sjakthol.stoptimes.db.task.GetFavoriteStopsTask;
 import io.github.sjakthol.stoptimes.db.task.QueryStopsTask;
@@ -83,7 +84,6 @@ public class StopListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Logger.d(TAG, "Creating new StopListActivity");
 
         setContentView(R.layout.activity_stop_list);
@@ -142,6 +142,12 @@ public class StopListActivity
     protected void onResume() {
         super.onResume();
         Logger.d(TAG, "onResume()");
+
+        if (shouldDownloadDatabase()) {
+            Logger.i(TAG, "Downloading stop database");
+            startActivity(new Intent(this, StopDatabaseUpdateActivity.class));
+            return;
+        }
 
         mIsStopped = false;
 
@@ -330,5 +336,15 @@ public class StopListActivity
                     getResources().getString(R.string.stoplist_empty_query_description)
             );
         }
+    }
+
+    private boolean shouldDownloadDatabase() {
+        String key = getResources().getString(R.string.stopdb_last_update);
+        long lastUpdate = PreferenceManager
+            .getDefaultSharedPreferences(this)
+            .getLong(key, -1);
+
+        // Update if update has not been performed
+        return lastUpdate == -1;
     }
 }
