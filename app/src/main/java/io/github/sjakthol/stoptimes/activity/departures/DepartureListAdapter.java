@@ -1,6 +1,7 @@
 package io.github.sjakthol.stoptimes.activity.departures;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,11 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
      * The list of departures this adapter adapts.
      */
     private Vector<Departure> mDepartures;
+
+    /**
+     * The default text colors.
+     */
+    private ColorStateList mDefaultColors;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mRoute;
@@ -103,6 +109,10 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
         holder.getTime().setText(leaves);
 
+        if (mDefaultColors == null) {
+            mDefaultColors = holder.getTime().getTextColors();
+        }
+
         // Highlight realtime departure times with a different color
         if (departure.isRealtime()) {
             int realtimeColor = ContextCompat.getColor(ctx, R.color.departure_realtime);
@@ -110,8 +120,8 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
             holder.getTime().setTextColor(realtimeColor);
             holder.getHeadsign().setTextColor(realtimeColor);
         } else {
-            holder.getTime().setTextColor(holder.getTime().getTextColors().getDefaultColor());
-            holder.getHeadsign().setTextColor(holder.getHeadsign().getTextColors().getDefaultColor());
+            holder.getTime().setTextColor(mDefaultColors);
+            holder.getHeadsign().setTextColor(mDefaultColors);
         }
     }
 
