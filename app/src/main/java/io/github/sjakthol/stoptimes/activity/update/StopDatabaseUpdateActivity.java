@@ -31,7 +31,9 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_stop_database_update);
+        setToolbar(R.id.toolbar);
 
         startUpdate();
     }
