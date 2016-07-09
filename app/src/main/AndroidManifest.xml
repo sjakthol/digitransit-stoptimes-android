@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="io.github.sjakthol.stoptimes">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -19,6 +20,7 @@
                 android:windowSoftInputMode="stateUnspecified|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -29,9 +31,16 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".activity.stoplist.StopListActivity"/>
         </activity>
-        <activity
-                android:name=".activity.settings.SettingsActivity" />
-        <meta-data tools:replace="android:value" android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <activity android:name=".activity.settings.SettingsActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"
+                tools:replace="android:value"/>
+
+        <activity android:name=".activity.update.StopDatabaseUpdateActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

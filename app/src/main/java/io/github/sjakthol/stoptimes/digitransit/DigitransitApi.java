@@ -43,7 +43,8 @@ public class DigitransitApi {
         "    }\n" +
         "  }\n" +
         "}";
-    public static final short WAIT_TIMEOUT = 30;
+
+    public static final short WAIT_TIMEOUT = 60;
 
     /**
      * Download a list of all stops.

@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.db.StopListContract;
 import io.github.sjakthol.stoptimes.utils.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Stop {
     private static final String TAG = Stop.class.getSimpleName();
@@ -66,6 +68,33 @@ public class Stop {
     }
 
     /**
+     * Construct a stop object from JSONObject.
+     *
+     * @param stop a JSONObject of form
+     *             { gtfsId: String,
+     *               name: String,
+     *               code: String,
+     *               lat: Double,
+     *               lon: Double,
+     *               platformCode: String,
+     *               vehicleType: Int }
+     *
+     * @return a Stop object
+     */
+    public static Stop fromJson(@NonNull JSONObject stop) throws JSONException {
+        return new Stop(
+            stop.getString("gtfsId"),
+            stop.getString("name"),
+            stop.optString("code", ""),
+            stop.getDouble("lat"),
+            stop.getDouble("lon"),
+            stop.getString("platformCode"),
+            stop.getInt("vehicleType"),
+            false
+        );
+    }
+
+    /**
      * Convert the given vehicle type code to a corresponding constant. Known types: 0 TRAM, 1 SUBWAY, 3 BUS and
      * 109 COMMUTER_TRAIN.
      *
@@ -86,6 +115,22 @@ public class Stop {
             default:
                 Logger.w(TAG, "Unknown vehicle type code '%d'", code);
                 return VehicleType.BUS;
+        }
+    }
+
+    public static int typeToCode(VehicleType type) {
+        switch (type) {
+            case TRAM:
+                return 0;
+            case SUBWAY:
+                return 1;
+            case BUS:
+                return 3;
+            case COMMUTER_TRAIN:
+                return 109;
+            default:
+                Logger.w(TAG, "Unknown vehicle type '%s'", type);
+                return 3;
         }
     }
 

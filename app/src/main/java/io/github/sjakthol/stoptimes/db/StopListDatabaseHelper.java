@@ -49,23 +49,8 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
                 StopListContract.Stop.STOPS_TABLE_NAME + "(" + StopListContract.Stop.COLUMN_NAME_GTFS_ID + ")" +
     " )";
 
-    private static final String SQL_INSERT_STOP =
-        "INSERT INTO " + StopListContract.Stop.STOPS_TABLE_NAME + " (" +
-            StopListContract.Stop.COLUMN_NAME_GTFS_ID + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_CODE + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_NAME + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_LAT + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_LON + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE + COMMA_SEP +
-            StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
-
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + StopListContract.Stop.STOPS_TABLE_NAME;
-
-    /**
-     * An application context used to create the database.
-     */
-    private Context mContext;
 
     /**
      * Create a new StopListDatabaseHelper for the given application context.
@@ -75,106 +60,17 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     public StopListDatabaseHelper(Context context) {
         // In-memory db for tests
         super(context, Helpers.isInJUnitTest() ? null : DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) throws CreateFailedException {
+    public void onCreate(SQLiteDatabase db) {
         Logger.i(TAG, "Creating stop database");
         db.execSQL(SQL_CREATE_STOPS_TABLE);
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
-
-        JSONObject response = this.fetchStops();
-        this.populateDatabase(db, response);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Logger.i(TAG, "Upgrading db from v%d to v%d", oldVersion, newVersion);
-
-        // TODO: Do something more sensible
-        db.execSQL(SQL_DELETE_ENTRIES);
-        this.onCreate(db);
-    }
-
-    /**
-     * Retrieves the stop list from the Digitransit API
-     *
-     * @return an object that contains the stops in data.stops array.
-     */
-    protected JSONObject fetchStops() {
-        if (!Helpers.isConnected(mContext)) {
-            Logger.w(TAG, "fetchStops() failed: no network connection available");
-            throw new NetworkRequiredException();
-        }
-
-        Logger.i(TAG, "Fetching stops");
-        RequestFuture<JSONObject> req = DigitransitApi.getAllStops(mContext);
-        try {
-            return req.get(DigitransitApi.WAIT_TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Logger.e(TAG, "Didn't expect InterruptedException but got it", e);
-            throw new CreateFailedException(e);
-        } catch (ExecutionException e) {
-            Logger.e(TAG, String.format("Request failed: %s", e.getMessage()), e);
-
-            // Network connection is missing. Notify the caller that network connection is required.
-            if (e.getCause() instanceof NoConnectionError) {
-                Logger.i(TAG, "Request failed due to networking issues");
-                throw new CreateFailedException(new NetworkRequiredException());
-            }
-
-            // Something else went wrong.
-            throw new CreateFailedException(e);
-
-        } catch (TimeoutException e) {
-            Logger.e(TAG, "Request timed out", e);
-            throw new CreateFailedException(e);
-        }
-    }
-
-    /**
-     * Populates the database with the given stop list response.
-     *
-     * @param response the JSON response from the Digitransit API
-     */
-    private void populateDatabase(SQLiteDatabase db, JSONObject response) {
-        Logger.i(TAG, "Populating database");
-
-        db.beginTransaction();
-        SQLiteStatement stmt = db.compileStatement(SQL_INSERT_STOP);
-
-        try {
-            JSONArray stops = response.getJSONObject("data").getJSONArray("stops");
-            Logger.d(TAG, "%d stops found", stops.length());
-
-            for (int i = 0; i < stops.length(); i++) {
-                stmt.clearBindings();
-
-                JSONObject stop = stops.getJSONObject(i);
-                if (BuildConfig.DEBUG) {
-                    Logger.d(TAG, String.format("Inserting: %s", stop.toString()));
-                }
-
-                stmt.bindString(1, stop.getString("gtfsId"));
-                stmt.bindString(2, stop.optString("code", ""));
-                stmt.bindString(3, stop.getString("name"));
-                stmt.bindDouble(4, stop.getDouble("lat"));
-                stmt.bindDouble(5, stop.getDouble("lon"));
-                stmt.bindLong(6, stop.getLong("vehicleType"));
-                stmt.bindString(7, stop.getString("platformCode"));
-                long id = stmt.executeInsert();
-                if (id < 0) {
-                    Logger.w(TAG, "Failed to insert %s", stop.getString("name"));
-                }
-            }
-
-            db.setTransactionSuccessful();
-        } catch (JSONException e) {
-            Logger.e(TAG, "Failed to parse response", e);
-            throw new CreateFailedException(e);
-        } finally {
-            db.endTransaction();
-        }
     }
 }
