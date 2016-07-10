@@ -173,9 +173,21 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
         // passed to action handlers.
         viewHolder.getRootView().setTag(stop);
 
+        // Format the stop name with the platform/track information
         viewHolder.getStopName().setText(stop.formatStopName(viewHolder.getRootView().getResources()));
-        viewHolder.getStopCode().setText(stop.getCode());
-        viewHolder.getStopCity().setText(stop.getCity());
+
+        if (stop.getCode().equals("null")) {
+            // The stop doesn't have a code which means we cannot
+            // determine the city it resides in. Hide the labels.
+            viewHolder.getStopCode().setVisibility(View.INVISIBLE);
+            viewHolder.getStopCity().setVisibility(View.INVISIBLE);
+        } else {
+            // We have a code, show them
+            viewHolder.getStopCode().setText(stop.getCode());
+            viewHolder.getStopCity().setText(stop.getCity());
+            viewHolder.getStopCode().setVisibility(View.VISIBLE);
+            viewHolder.getStopCity().setVisibility(View.VISIBLE);
+        }
 
         viewHolder.setFavoriteCheckboxState(stop.isFavorite());
         viewHolder.getStopIcon().setImageResource(stop.getVehicleTypeIcon());
@@ -186,10 +198,9 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
         } else {
             double distance = mUserLocation.distanceTo(stop.getLocation());
             String distanceText = Helpers.formatDistance(distance);
-            String template = viewHolder.getRootView().getContext().getString(R.string.distance_template);
 
             viewHolder.getDistance().setVisibility(View.VISIBLE);
-            viewHolder.getDistance().setText(String.format(template, distanceText));
+            viewHolder.getDistance().setText(distanceText);
         }
     }
 

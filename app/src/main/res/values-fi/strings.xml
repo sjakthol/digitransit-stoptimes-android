@@ -9,7 +9,6 @@
     <string name="departure_list_update_timeout">Päivitys kesti liian kauan. Yritä uudelleen hetken kuluttua.</string>
     <string name="departure_list_update_unexpected_failure">Tuntematon virhe. Lähtöjä ei kyetty päivittämään.</string>
     <string name="departure_now">Nyt</string>
-    <string name="distance_template"><![CDATA[  - %s]]></string>
     <string name="loading_default">Ladataan…</string>
     <string name="loading_departures">Ladataan lähtöjä…</string>
     <string name="loading_stops">Ladataan pysäkkitietoja…</string>
