@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,17 @@ import io.github.sjakthol.stoptimes.utils.Logger;
 /**
  * A fragment that displays no connection message.
  */
-public class NoConnectionFragment extends Fragment {
+public class NoConnectionFragment extends MessageFragment {
     private static final String TAG = NoConnectionFragment.class.getSimpleName();
 
+    public NoConnectionFragment() {
+        super();
+
+        setMessage(
+            R.string.nca_title,
+            R.string.nca_details
+        );
+    }
     /**
      * An activity that listens for OnConnectionAvailable events.
      */
@@ -38,11 +47,6 @@ public class NoConnectionFragment extends Fragment {
          * Called when connection has been established.
          */
         void onConnectionAvailable();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_no_connection, container, false);
     }
 
     @Override
