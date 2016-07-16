@@ -11,6 +11,7 @@ import com.android.volley.*;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.BaseActivity;
 import io.github.sjakthol.stoptimes.activity.generic.LoadingFragment;
+import io.github.sjakthol.stoptimes.activity.generic.MessageFragment;
 import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
@@ -116,6 +117,18 @@ public class DepartureListActivity extends BaseActivity implements
         if (!mDepartureList.isAdded()) {
             Logger.i(TAG, "Showing DepartureListFragment after initial update");
             setFragment(mDepartureList, FRAG_DEPARTURE_LIST);
+        }
+
+        if (departures.isEmpty()) {
+            Logger.i(TAG, "Got empty departure list; showing notice");
+            MessageFragment frag = MessageFragment.withMessage(
+                R.string.departures_empty_title,
+                R.string.departures_empty_desc
+            );
+
+            setFragment(frag);
+
+            return;
         }
 
         Logger.i(TAG, "Updating DepartureListFragment");
