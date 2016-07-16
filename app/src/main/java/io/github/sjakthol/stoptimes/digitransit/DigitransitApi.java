@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -24,11 +23,10 @@ public class DigitransitApi {
     private static final String TAG = "DigitransitApi";
     private static final String API_HOST = "https://api.digitransit.fi";
     private static final String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
-
-    // TODO: Digitransit returns internal server error when variables are used
-    private static final String QUERY_DEPARTURES_TEMPLATE = "query {\n" +
-        "  stop(id: \"%s\") {\n" +
-        "    stoptimesWithoutPatterns(numberOfDepartures: %d) {\n" +
+    private static final String QUERY_DEPARTURES =
+        "query ($stop: String!, $departures: Int) {\n" +
+        "  stop(id: $stop) {\n" +
+        "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
         "      serviceDay,\n" +
         "      scheduledDeparture,\n" +
@@ -51,7 +49,7 @@ public class DigitransitApi {
      *
      * @return a Future that resolves with a JSONObject that contains all known stops as data.stops.
      */
-    public static RequestFuture<JSONObject> getAllStops(Context ctx) {
+    public static RequestFuture<JSONObject> getAllStops(Context ctx) throws JSONException {
         String query = "query {stops { gtfsId, name, lat, lon, code, vehicleType, platformCode } }";
         JSONObject body = buildGraphQLQuery(query, null);
 
@@ -81,13 +79,15 @@ public class DigitransitApi {
         final Context ctx,
         final String stopId,
         final int numDepartures,
-        final DepartureResponseListener listener)
-    {
-        String query = String.format(Locale.US, QUERY_DEPARTURES_TEMPLATE, stopId, numDepartures);
-        JSONObject body = buildGraphQLQuery(query, null);
+        final DepartureResponseListener listener) throws JSONException {
+        HashMap<String, String> vars = new HashMap<>();
+        vars.put("stop", stopId);
+        vars.put("departures", String.valueOf(numDepartures));
+
+        JSONObject body = buildGraphQLQuery(QUERY_DEPARTURES, vars);
 
         Logger.i(TAG, "Fetching %d departures for %s", numDepartures, stopId);
-        Logger.d(TAG, query);
+        Logger.d(TAG, "%s", body);
 
         JsonObjectRequest req = new JsonObjectRequest(API_GRAPHQL, body, new Response.Listener<JSONObject>() {
             @Override
@@ -145,12 +145,18 @@ public class DigitransitApi {
      * @param variables the variables
      * @return the request body
      */
-    private static JSONObject buildGraphQLQuery(String query, @Nullable String variables) {
-        HashMap<String, String> payload = new HashMap<>();
-        payload.put("query", query);
+    private static JSONObject buildGraphQLQuery(String query, @Nullable HashMap<String, String> variables)
+            throws JSONException
+    {
+        JSONObject req = new JSONObject();
+        req.put("query", query);
 
-        // TODO: Variables support once Digitransit works
-        return new JSONObject(payload);
+        // Add variables only if given
+        if (variables != null) {
+            req.put("variables", new JSONObject(variables));
+        }
+
+        return req;
     }
 
     public interface DepartureResponseListener {

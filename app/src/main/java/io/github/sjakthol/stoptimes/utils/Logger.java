@@ -49,4 +49,14 @@ public class Logger {
     public static void e(String TAG, String msg, Object ...params) {
         if (!TESTING) Log.e(TAG, String.format(msg, params));
     }
+
+    public static void wtf(String TAG, String msg) {
+        if (!TESTING) Log.wtf(TAG, msg);
+    }
+    public static void wtf(String TAG, String msg, Throwable tr) {
+        if (!TESTING) Log.wtf(TAG, msg, tr);
+    }
+    public static void wtf(String TAG, String msg, Object ...params) {
+        if (!TESTING) Log.wtf(TAG, String.format(msg, params));
+    }
 }

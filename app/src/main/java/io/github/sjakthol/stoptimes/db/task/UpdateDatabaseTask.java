@@ -71,8 +71,8 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
      */
     public Vector<Stop> _fetchStops() {
         Logger.i(TAG, "Fetching stops");
-        RequestFuture<JSONObject> req = DigitransitApi.getAllStops(mContext);
         try {
+            RequestFuture<JSONObject> req = DigitransitApi.getAllStops(mContext);
             JSONObject res = req.get(DigitransitApi.WAIT_TIMEOUT, TimeUnit.SECONDS);
             return parseResponse(res);
         } catch (InterruptedException e) {

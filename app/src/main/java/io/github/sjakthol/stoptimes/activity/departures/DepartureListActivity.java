@@ -18,6 +18,7 @@ import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
+import org.json.JSONException;
 
 import java.util.Vector;
 
@@ -187,7 +188,14 @@ public class DepartureListActivity extends BaseActivity implements
         showLoadingIndicator();
 
         Logger.i(TAG, "Fetching departures from Digitransit");
-        DigitransitApi.getDepartures(this, mStopId, getNumDepartures(), this);
+        try {
+            DigitransitApi.getDepartures(this, mStopId, getNumDepartures(), this);
+        } catch (JSONException e) {
+            // This can happen if getNumDepartures() is infinity or NaN. If
+            // it does, YOLO!
+            Logger.wtf(TAG, "getNumDepartures() == %s", getNumDepartures());
+            Logger.wtf(TAG, "Bad JSON!", e);
+        }
     }
 
     /**
