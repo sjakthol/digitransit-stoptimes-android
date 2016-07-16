@@ -56,15 +56,6 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         }
     }
 
-    /**
-     * Create a new DepartureListAdapter with the given list of departures.
-     *
-     * @param departures the departures
-     */
-    DepartureListAdapter(Vector<Departure> departures) {
-        mDepartures = departures;
-    }
-
     @Override
     public int getItemCount() {
         return mDepartures == null ? 0 : mDepartures.size();

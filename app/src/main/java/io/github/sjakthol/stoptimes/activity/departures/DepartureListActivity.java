@@ -2,7 +2,6 @@ package io.github.sjakthol.stoptimes.activity.departures;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -16,17 +15,16 @@ import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
-import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
+import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 
 import java.util.Vector;
 
-public class DepartureListActivity
-        extends BaseActivity
-        implements  NoConnectionFragment.OnConnectionAvailable,
-                    DepartureListFragment.Hooks,
-                    DigitransitApi.DepartureResponseListener
+public class DepartureListActivity extends BaseActivity implements
+    NoConnectionFragment.OnConnectionAvailable,
+    DepartureListFragment.Hooks,
+    DigitransitApi.DepartureResponseListener
 {
     private static final String TAG = DepartureListActivity.class.getSimpleName();
     private static final String FRAG_DEPARTURE_LIST = "FRAG_DEPARTURE_LIST";
@@ -40,10 +38,10 @@ public class DepartureListActivity
     private String mStopId;
 
     /**
-     * A flag used to determine if the view is already showing departures. Affects
-     * the error handling of departure updates.
+     * A singleton DepartureListFragment used to display
+     * the departures.
      */
-    private boolean mHasLoadedDepartures;
+    private DepartureListFragment mDepartureList;
 
     public DepartureListActivity() {
         super(R.id.departure_list_content);
@@ -63,8 +61,13 @@ public class DepartureListActivity
             toolbar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Get the singleton DepartureListFragment or create a new empty one.
+        mDepartureList = (DepartureListFragment) getFragment(FRAG_DEPARTURE_LIST);
+        if (mDepartureList == null) {
+            mDepartureList = new DepartureListFragment();
+        }
+
         mStopId = getIntent().getStringExtra(EXTRA_STOP_ID);
-        mHasLoadedDepartures = false;
 
         // Update will be triggered by onResume()
     }
@@ -104,29 +107,27 @@ public class DepartureListActivity
         updateDepartures();
     }
 
-    /** Digitransit API hooks **/
+    /**
+     * Digitransit API hooks
+     **/
     @Override
     public void onDeparturesAvailable(Vector<Departure> departures) {
-        DepartureListFragment frag = getDepartureList();
-        if (frag == null) {
-            Logger.i(TAG, "No departure list found; creating new one");
-            frag = DepartureListFragment.withDepartures(departures);
-            setFragment(frag, FRAG_DEPARTURE_LIST);
-        } else {
-            Logger.i(TAG, "Updating existing fragment");
-            frag.setDepartureList(departures);
-            frag.updateFinished();
+        if (!mDepartureList.isAdded()) {
+            Logger.i(TAG, "Showing DepartureListFragment after initial update");
+            setFragment(mDepartureList, FRAG_DEPARTURE_LIST);
         }
 
-        mHasLoadedDepartures = true;
+        Logger.i(TAG, "Updating DepartureListFragment");
+        mDepartureList.setDepartureList(departures);
+        mDepartureList.updateFinished();
     }
 
     @Override
     public void onDepartureLoadError(VolleyError error) {
         Logger.e(TAG, "Digitransit API returned failure", error);
 
-        if (!mHasLoadedDepartures) {
-            // Nothing in the UI; show an error screen.
+        if (!mDepartureList.isAdded()) {
+            // The departure list is not shown; show an error screen.
             Fragment frag = error instanceof NoConnectionError ?
                     new NoConnectionFragment() :
                     new UnexpectedErrorFragment();
@@ -145,11 +146,8 @@ public class DepartureListActivity
             showUpdateErrorSnackbar(R.string.departure_list_update_unexpected_failure);
         }
 
-        // In case we ended up keeping the old list around, remove the loading indicator
-        DepartureListFragment frag = getDepartureList();
-        if (frag != null) {
-            frag.updateFinished();
-        }
+        // Notify the fragment that update has finished
+        mDepartureList.updateFinished();
     }
 
     /**
@@ -161,12 +159,16 @@ public class DepartureListActivity
     private void showUpdateErrorSnackbar(@StringRes int message) {
         Helpers.snackbarWithRetry(findViewById(android.R.id.content), message,
                 new View.OnClickListener() {
-                    public void onClick(View v) { updateDepartures(); }
+                    public void onClick(View v) {
+                        updateDepartures();
+                    }
                 }
         ).show();
     }
 
-    /** DepartureListFragment hooks **/
+    /**
+     * DepartureListFragment hooks
+     **/
     @Override
     public void onLoadMoreDepartures() {
         // TODO: Implement once supported
@@ -192,29 +194,14 @@ public class DepartureListActivity
      * Shows the loading screen or refresh spinner for the duration of the update.
      */
     private void showLoadingIndicator() {
-        if (mHasLoadedDepartures) {
-            Logger.d(TAG, "Showing SwipeRefresh spinner for non-initial load");
-            DepartureListFragment list = getDepartureList();
-
-            if (list == null) {
-                throw new AssertionError("Departures loaded but the list not found");
-            } else {
-                list.updateStarted();
-            }
+        if (mDepartureList.isAdded()) {
+            Logger.d(TAG, "Showing spinner since list is shown");
+            mDepartureList.updateStarted();
         } else {
-            Logger.d(TAG, "Showing loading screen for initial load");
+            Logger.d(TAG, "Showing loading screen since list is hidden");
             String msg = getResources().getString(R.string.loading_departures);
             setFragment(LoadingFragment.createWithMessage(msg));
         }
-    }
-
-    /**
-     * Find the departure list fragment (if any).
-     *
-     * @return an existing fragment or null if not found
-     */
-    private @Nullable DepartureListFragment getDepartureList() {
-        return (DepartureListFragment) getFragment(FRAG_DEPARTURE_LIST);
     }
 
     /**

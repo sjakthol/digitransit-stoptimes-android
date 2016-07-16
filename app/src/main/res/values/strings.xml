@@ -47,11 +47,10 @@
     <string name="stop_location_tuusula">Tuusula</string>
     <string name="stop_location_unknown">Unknown</string>
     <string name="departure_now">Now</string>
-    <string name="departure_list_update_no_connection_failure">No internet connection available. Departures cannot be
-        updated.
-    </string>
-    <string name="departure_list_update_unexpected_failure">An unknown error occurred. Departures cannot be updated.
-    </string>
+    <string name="departure_list_update_no_connection_failure">Update failed: No connection</string>
+    <string name="departure_list_update_unexpected_failure">Update failed: Unexpected error</string>
+    <string name="departure_list_update_timeout">Update failed: Timeout</string>
+    <string name="departure_list_update_server_error">Update failed: Server error</string>
     <string name="retry">Retry</string>
     <string name="pref_use_location_title">Use Location</string>
     <string name="pref_use_location_summary">Your location will be used to enhance the application functionality.
@@ -67,10 +66,6 @@
 
     <string name="pref_key_stoplist_num_results">stoplist_num_results</string>
     <string name="pref_key_departures_num_results">num_departures</string>
-    <string name="departure_list_update_timeout">Departure update timed out. Try again in a few moments.</string>
-    <string name="departure_list_update_server_error">Departure update failed due to server error. Try again in a few
-        moments.
-    </string>
     <string name="stop_location_kauniainen">Kauniainen</string>
     <string name="db_update_loading_message">Updating Stop Database…</string>
     <string name="action_update">Update Stop Database</string>

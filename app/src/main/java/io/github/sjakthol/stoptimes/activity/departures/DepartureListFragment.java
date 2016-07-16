@@ -24,11 +24,6 @@ public class DepartureListFragment extends Fragment {
     private static final int REFRESH_DELAY_MILLIS = 60000;
 
     /**
-     * The list of departures.
-     */
-    private Vector<Departure> mDepartures;
-
-    /**
      * The activity that handles departure updates.
      */
     private Hooks mListener;
@@ -46,14 +41,24 @@ public class DepartureListFragment extends Fragment {
     /**
      * A runnable object that requests the departure list to be updated periodically.
      */
-    private Runnable mRefreshRunnable;
+    private Runnable mRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mListener.onDepartureUpdate();
+
+            // Schedule the next update.
+            mHandler.postDelayed(mRefreshRunnable, REFRESH_DELAY_MILLIS);
+        }
+    };
 
     /**
      * A handler used to dispatch the update runnable.
      */
     private Handler mHandler;
 
-    public DepartureListFragment() {}
+    public DepartureListFragment() {
+        mAdapter = new DepartureListAdapter();
+    }
 
     /**
      * Create a new DepartureListFragment with the given list of departures.
@@ -94,21 +99,9 @@ public class DepartureListFragment extends Fragment {
             }
         });
 
-        mAdapter = new DepartureListAdapter(mDepartures);
-
         RecyclerView recycler = (RecyclerView) layout.findViewById(R.id.departure_list_recycler);
         recycler.setAdapter(mAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        mRefreshRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mListener.onDepartureUpdate();
-
-                // Schedule the next update.
-                mHandler.postDelayed(mRefreshRunnable, REFRESH_DELAY_MILLIS);
-            }
-        };
 
         return layout;
     }
@@ -144,12 +137,8 @@ public class DepartureListFragment extends Fragment {
      * @param departures the list of departures
      */
     void setDepartureList(Vector<Departure> departures) {
-        Logger.i(TAG, "Changing departure list");
-        mDepartures = departures;
-
-        if (mAdapter != null) {
-            mAdapter.setDepartureList(departures);
-        }
+        Logger.i(TAG, "Changing departure list to %s", departures);
+        mAdapter.setDepartureList(departures);
     }
 
     /**
@@ -157,20 +146,27 @@ public class DepartureListFragment extends Fragment {
      * update finishes or a loading indicator is shown on the screen indefinitely.
      */
     void updateStarted() {
-        if (mRefreshLayout != null) {
-            Logger.d(TAG, "Update has started; showing spinner");
-            mRefreshLayout.setRefreshing(true);
+        if (mRefreshLayout == null) {
+            Logger.w(TAG, "updateStarted() called with null mRefreshLayout!");
+            return;
         }
+
+        Logger.d(TAG, "Update has started; showing spinner");
+        mRefreshLayout.setRefreshing(true);
     }
 
     /**
      * Notify the fragment that any pending update has finished.
      */
     void updateFinished() {
-        if (mRefreshLayout != null) {
-            Logger.d(TAG, "Clearing refresh indicator");
-            mRefreshLayout.setRefreshing(false);
+        if (mRefreshLayout == null) {
+            Logger.w(TAG, "updateFinished() called with null mRefreshLayout!");
+            return;
         }
+
+        Logger.d(TAG, "Clearing refresh indicator");
+        mRefreshLayout.setRefreshing(false);
+
     }
 
     /**

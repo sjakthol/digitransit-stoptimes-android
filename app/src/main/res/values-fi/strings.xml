@@ -2,12 +2,10 @@
 <resources>
     <string name="app_name">Pysäkkiaikataulut</string>
     <string name="action_settings">Asetukset</string>
-    <string name="departure_list_update_no_connection_failure">Ei verkkoyhteyttä. Lähtöjä ei kyetty päivittämään.</string>
-    <string name="departure_list_update_server_error">Lähtöpäivitys epäonnistui palvelinvirheen johdosta. Yritä
-        uudelleen hetken kuluttua.
-    </string>
-    <string name="departure_list_update_timeout">Päivitys kesti liian kauan. Yritä uudelleen hetken kuluttua.</string>
-    <string name="departure_list_update_unexpected_failure">Tuntematon virhe. Lähtöjä ei kyetty päivittämään.</string>
+    <string name="departure_list_update_no_connection_failure">Päivitys epäonnistui: Ei verkkoyhteyttä</string>
+    <string name="departure_list_update_server_error">Päivitys epäonnistui: Palvelinvirhe</string>
+    <string name="departure_list_update_timeout">Päivitys epäonnistui: Aikakatkaisu</string>
+    <string name="departure_list_update_unexpected_failure">Päivitys epäonnistui: Odottamaton virhe</string>
     <string name="departure_now">Nyt</string>
     <string name="loading_default">Ladataan…</string>
     <string name="loading_departures">Ladataan lähtöjä…</string>
