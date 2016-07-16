@@ -45,16 +45,15 @@ public class UpdateFavoriteStatusTask extends DatabaseTask<Bundle, Void> {
         boolean isFavorite = params[0].getBoolean(BUNDLE_IS_FAVORITE);
         String stopId = params[0].getString(BUNDLE_STOP_ID);
 
-        long changed = -1;
         if (isFavorite) {
-            Logger.i(TAG, "Adding %s from favorites", stopId);
+            Logger.i(TAG, "Adding %s to favorites", stopId);
 
             // Prepare data
             ContentValues values = new ContentValues();
             values.put(StopListContract.Stop.COLUMN_NAME_GTFS_ID, stopId);
 
             // Insert
-            changed = db.insert(StopListContract.Stop.FAVORITES_TABLE_NAME, null, values);
+            db.insert(StopListContract.Stop.FAVORITES_TABLE_NAME, null, values);
 
         } else {
             Logger.i(TAG, "Removing %s from favorites", stopId);
@@ -64,11 +63,11 @@ public class UpdateFavoriteStatusTask extends DatabaseTask<Bundle, Void> {
             String[] whereArgs = {stopId};
 
             // Delete
-            changed = db.delete(StopListContract.Stop.FAVORITES_TABLE_NAME, where, whereArgs);
-        }
+            long changed = db.delete(StopListContract.Stop.FAVORITES_TABLE_NAME, where, whereArgs);
 
-        if (changed != 1) {
-            Logger.w(TAG, "Unexpected number of columns changed %d columns", changed);
+            if (changed != 1) {
+                Logger.w(TAG, "Unexpected number of rows deleted: %d rows", changed);
+            }
         }
 
         return null;
