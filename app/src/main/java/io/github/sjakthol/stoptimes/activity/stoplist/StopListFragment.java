@@ -4,7 +4,6 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
@@ -36,29 +34,6 @@ public class StopListFragment extends Fragment {
      */
     private Cursor mCursor;
 
-    /**
-     * The title for the empty list view.
-     */
-    private String mEmptyTitle;
-
-    /**
-     * The description for the empty list view.
-     */
-    private String mEmptyDesc;
-
-    /**
-     * Create a new fragment with the given cursor. When the fragment is appended the data from
-     * the cursor will be displayed.
-     *
-     * @param cursor the cursor to show
-     * @return new StopListFragment
-     */
-    static StopListFragment newInstance(Cursor cursor) {
-        StopListFragment frag = new StopListFragment();
-        frag.setCursor(cursor);
-        return frag;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Logger.d(TAG, "onCreateView()");
@@ -74,14 +49,6 @@ public class StopListFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Logger.d(TAG, "onActivityCreated()");
-
-        checkEmptiness();
     }
 
     @Override
@@ -150,60 +117,7 @@ public class StopListFragment extends Fragment {
 
         if (mAdapter != null) {
             Logger.i(TAG, "Updating adapter with a new cursor");
-            mAdapter.swapCursor(cursor);
-
-            // Check if the new cursor is empty.
-            checkEmptiness();
+            mAdapter.changeCursor(cursor);
         }
-    }
-
-    /**
-     * Set the messages that are displayed when the view is empty.
-     *
-     * @param title the title to show
-     * @param desc the description to show
-     */
-    void setEmptyText(@NonNull String title, @NonNull String desc) {
-        mEmptyTitle = title;
-        mEmptyDesc = desc;
-
-        if (getView() != null) {
-            ensureCorrectEmptyTexts();
-        }
-    }
-
-    /**
-     * Checks the emptiness of the current cursor and shows the empty
-     * view notice if the cursor is empty.
-     */
-    private void checkEmptiness() {
-        if (mAdapter.getItemCount() == 0) {
-            Logger.i(TAG, "checkEmptiness(): List empty; showing notice");
-            ensureCorrectEmptyTexts();
-
-            getView().findViewById(R.id.stop_list_recycler).setVisibility(View.GONE);
-            getView().findViewById(R.id.stop_list_empty).setVisibility(View.VISIBLE);
-
-        } else {
-            Logger.i(TAG, "checkEmptiness(): List non-empty; showing list");
-            getView().findViewById(R.id.stop_list_recycler).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.stop_list_empty).setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * Ensures that the empty view messages have the correct texts set.
-     */
-    private void ensureCorrectEmptyTexts() {
-        if (getView() == null) {
-            Logger.w(TAG, "ensureCorrectEmptyTexts() called before the view has been created");
-            return;
-        }
-
-        TextView title = (TextView) getView().findViewById(R.id.stop_list_empty_title);
-        TextView desc = (TextView) getView().findViewById(R.id.stop_list_empty_desc);
-
-        title.setText(mEmptyTitle);
-        desc.setText(mEmptyDesc);
     }
 }

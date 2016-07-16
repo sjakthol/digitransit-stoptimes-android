@@ -24,7 +24,7 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<String> {
      *
      * @param dbHelper the database helper instance
      */
-    protected QueryStopsTask(StopListDatabaseHelper dbHelper) {
+    public QueryStopsTask(StopListDatabaseHelper dbHelper) {
         super(dbHelper);
     }
 
