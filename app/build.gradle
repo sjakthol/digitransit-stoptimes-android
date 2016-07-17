@@ -50,6 +50,9 @@ dependencies {
     // For discovering the user location
     compile 'io.nlopez.smartlocation:library:3.2.4'
 
+    // For the bottom drawer
+    compile 'com.roughike:bottom-bar:1.4.0'
+
     testCompile 'junit:junit:4.12'
 
     androidTestCompile 'com.android.support:support-annotations:24.0.0'

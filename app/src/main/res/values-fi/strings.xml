@@ -66,4 +66,7 @@
     <string name="stopdb_last_update">stopdb_last_update_timestamp</string>
     <string name="departures_empty_title">Ei lähtöjä</string>
     <string name="departures_empty_desc">Pysäkillä ei ole liikennettä lähitulevaisuudessa.</string>
+
+    <string name="bottom_favorites">Suosikit</string>
+    <string name="bottom_nearby">Lähellä</string>
 </resources>

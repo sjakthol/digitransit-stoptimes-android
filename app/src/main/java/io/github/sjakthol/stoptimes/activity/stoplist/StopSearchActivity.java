@@ -1,23 +1,16 @@
 package io.github.sjakthol.stoptimes.activity.stoplist;
 
 import android.database.Cursor;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import io.github.sjakthol.stoptimes.R;
-import io.github.sjakthol.stoptimes.activity.generic.MessageFragment;
-import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
 import io.github.sjakthol.stoptimes.db.task.QueryStopsTask;
 import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import io.github.sjakthol.stoptimes.utils.Logger;
-
-import java.util.regex.Pattern;
 
 public class StopSearchActivity extends StopListActivityBase
         implements SearchView.OnCloseListener, SearchView.OnQueryTextListener
@@ -138,23 +131,5 @@ public class StopSearchActivity extends StopListActivityBase
             R.string.stoplist_empty_query_title,
             R.string.stoplist_empty_query_description
         );
-    }
-
-    /**
-     * Get the number of stops a query should return.
-     *
-     * @return the number of stops as a string
-     */
-    private String getNumStops() {
-        String key = getString(R.string.pref_key_stoplist_num_results);
-        String limit = PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getString(key, "20");
-        if (!Pattern.matches("\\d+", limit)) {
-            Logger.w(TAG, "getNumStops(): Invalid limit %s", limit);
-            limit = "20";
-        }
-
-        return limit;
     }
 }

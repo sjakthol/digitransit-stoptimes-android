@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -20,6 +21,8 @@ import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
+
+import java.util.regex.Pattern;
 
 public abstract class StopListActivityBase extends BaseActivity
         implements StopListAdapter.ActionHandler, OnLocationUpdatedListener {
@@ -182,6 +185,24 @@ public abstract class StopListActivityBase extends BaseActivity
     void showMessage(@StringRes int title, @StringRes int desc) {
         MessageFragment frag = MessageFragment.withMessage(title, desc);
         setFragment(frag);
+    }
+
+    /**
+     * Get the number of stops a query should return.
+     *
+     * @return the number of stops as a string
+     */
+    String getNumStops() {
+        String key = getString(R.string.pref_key_stoplist_num_results);
+        String limit = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString(key, "20");
+        if (!Pattern.matches("\\d+", limit)) {
+            Logger.w(TAG, "getNumStops(): Invalid limit %s", limit);
+            limit = "20";
+        }
+
+        return limit;
     }
 
     /**
