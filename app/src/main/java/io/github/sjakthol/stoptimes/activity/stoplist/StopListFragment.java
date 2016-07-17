@@ -4,7 +4,6 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.github.sjakthol.stoptimes.R;
-import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * A {@link Fragment} that displays a list of stops. An activity that embeds this
@@ -42,6 +38,7 @@ public class StopListFragment extends Fragment {
 
         Logger.i(TAG, "Creating an adapter with cursor=%s", mCursor);
         mAdapter = new StopListAdapter(getActivity(), mCursor);
+        mAdapter.setUserLocation(StopListActivityBase.getCachedLocation());
 
         // Setup the recycler
         RecyclerView recycler = (RecyclerView) root.findViewById(R.id.stop_list_recycler);
@@ -62,8 +59,6 @@ public class StopListFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity() + " must implement StopListAdapter.ActionHandler");
         }
-
-        maybeStartLocationTracking();
     }
 
     @Override
@@ -73,38 +68,6 @@ public class StopListFragment extends Fragment {
 
         // Remove the action handler
         mAdapter.setActionHandler(null);
-
-        stopLocationTracking();
-    }
-
-    /**
-     * Starts tracking user location if the corresponding setting is enabled.
-     */
-    private void maybeStartLocationTracking() {
-        if (!Helpers.shouldTrackLocation(getContext())) {
-            Logger.i(TAG, "maybeStartLocationTracking(): Location tracking disabled.");
-            return;
-        }
-
-        Logger.i(TAG, "maybeStartLocationTracking(): Starting to track user location");
-        SmartLocation.with(getContext()).location().start(new OnLocationUpdatedListener() {
-            @Override
-            public void onLocationUpdated(Location location) {
-                Logger.d(TAG, "Location updated: %s", location);
-
-                if (mAdapter != null) {
-                    mAdapter.setUserLocation(location);
-                }
-            }
-        });
-    }
-
-    /**
-     * Stops tracking user location.
-     */
-    private void stopLocationTracking() {
-        Logger.i(TAG, "Stopping location tracking.");
-        SmartLocation.with(getContext()).location().stop();
     }
 
     /**
@@ -118,6 +81,12 @@ public class StopListFragment extends Fragment {
         if (mAdapter != null) {
             Logger.i(TAG, "Updating adapter with a new cursor");
             mAdapter.changeCursor(cursor);
+        }
+    }
+
+    void onLocationUpdated(Location location) {
+        if (mAdapter != null) {
+            mAdapter.setUserLocation(location);
         }
     }
 }

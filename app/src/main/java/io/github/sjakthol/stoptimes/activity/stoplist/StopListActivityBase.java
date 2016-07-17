@@ -2,6 +2,7 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -15,13 +16,30 @@ import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
 import io.github.sjakthol.stoptimes.db.task.UpdateFavoriteStatusTask;
 import io.github.sjakthol.stoptimes.digitransit.models.Stop;
 import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
+import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 public abstract class StopListActivityBase extends BaseActivity
-        implements StopListAdapter.ActionHandler
-{
+        implements StopListAdapter.ActionHandler, OnLocationUpdatedListener {
     private static final String TAG = StopListActivityBase.class.getSimpleName();
     private static final String FRAG_LIST = "FRAG_LIST";
+    private static final long LOCATION_LIFETIME = 60 * 1000 * 1000 * 1000L;
+
+    /**
+     * The current user location.
+     */
+    private static Location sCurrentLocation = null;
+    private static long sLocationTimestamp = 0;
+
+    public static Location getCachedLocation() {
+        if (System.nanoTime() - sLocationTimestamp > LOCATION_LIFETIME) {
+            return null;
+        }
+
+        return sCurrentLocation;
+    }
 
     /**
      * The database helper to use for accessing the database.
@@ -53,6 +71,35 @@ public abstract class StopListActivityBase extends BaseActivity
         mStopList = (StopListFragment) getFragment(FRAG_LIST);
         if (mStopList == null) {
             mStopList = new StopListFragment();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Helpers.shouldTrackLocation(this)) {
+            Logger.i(TAG, "Starting to track user location");
+            SmartLocation.with(this).location().start(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (Helpers.shouldTrackLocation(this)) {
+            Logger.i(TAG, "Stoppping location tracking");
+            SmartLocation.with(this).location().stop();
+        }
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+
+        sLocationTimestamp = System.currentTimeMillis();
+        sCurrentLocation = location;
+
+        if (mStopList != null) {
+            mStopList.onLocationUpdated(location);
         }
     }
 
