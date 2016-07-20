@@ -98,6 +98,9 @@ public class StopListActivity
         super.onSaveInstanceState(outState);
 
         outState.putSerializable(BUNDLE_STOP_LIST_SOURCE, mStopListSource);
+        if (mBottomBar != null) {
+            mBottomBar.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -144,7 +147,9 @@ public class StopListActivity
     public void onLocationUpdated(Location location) {
         super.onLocationUpdated(location);
 
-        updateNearbyStops(location);
+        if (mStopListSource == StopListSource.NEARBY) {
+            updateNearbyStops(location);
+        }
     }
 
     private void updateNearbyStops(Location location) {

@@ -63,8 +63,6 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
      */
     StopListAdapter(Context ctx, Cursor cursor) {
         super(ctx, cursor);
-
-        Logger.d(TAG, "%s, %s", ctx, cursor);
     }
 
     /**

@@ -36,6 +36,7 @@ public abstract class StopListActivityBase extends BaseActivity
     private static Location sCurrentLocation = null;
     private static long sLocationTimestamp = 0;
 
+    @Nullable
     public static Location getCachedLocation() {
         if (System.nanoTime() - sLocationTimestamp > LOCATION_LIFETIME) {
             return null;
@@ -98,7 +99,7 @@ public abstract class StopListActivityBase extends BaseActivity
     @Override
     public void onLocationUpdated(Location location) {
 
-        sLocationTimestamp = System.currentTimeMillis();
+        sLocationTimestamp = System.nanoTime();
         sCurrentLocation = location;
 
         if (mStopList != null) {
