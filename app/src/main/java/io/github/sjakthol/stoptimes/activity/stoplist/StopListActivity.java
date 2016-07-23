@@ -135,10 +135,10 @@ public class StopListActivity
                 }.execute();
                 break;
             case NEARBY:
-                if (getCachedLocation() == null) {
+                if (getLocation() == null) {
                     showAcquiringLocationMessage();
                 } else {
-                    updateNearbyStops(getCachedLocation());
+                    updateNearbyStops(getLocation());
                 }
         }
     }

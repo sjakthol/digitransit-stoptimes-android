@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -28,22 +29,18 @@ public abstract class StopListActivityBase extends BaseActivity
         implements StopListAdapter.ActionHandler, OnLocationUpdatedListener {
     private static final String TAG = StopListActivityBase.class.getSimpleName();
     private static final String FRAG_LIST = "FRAG_LIST";
-    private static final long LOCATION_LIFETIME = 60 * 1000 * 1000 * 1000L;
+
+    // 100 meters
+    private static final float LOCATION_MIN_ACCURACY = 100;
+
+    // 3 minutes
+    private static final long LOCATION_MAX_AGE_NS = 3 * 60 * 1000 * 1000 * 1000L;;
 
     /**
-     * The current user location.
+     * The last received user location.
      */
     private static Location sCurrentLocation = null;
-    private static long sLocationTimestamp = 0;
-
-    @Nullable
-    public static Location getCachedLocation() {
-        if (System.nanoTime() - sLocationTimestamp > LOCATION_LIFETIME) {
-            return null;
-        }
-
-        return sCurrentLocation;
-    }
+    private static long sCurrentLocationTimestamp = 0;
 
     /**
      * The database helper to use for accessing the database.
@@ -83,7 +80,7 @@ public abstract class StopListActivityBase extends BaseActivity
         super.onResume();
         if (Helpers.shouldTrackLocation(this)) {
             Logger.i(TAG, "Starting to track user location");
-            SmartLocation.with(this).location().start(this);
+            getLocationController().start(this);
         }
     }
 
@@ -92,18 +89,22 @@ public abstract class StopListActivityBase extends BaseActivity
         super.onPause();
         if (Helpers.shouldTrackLocation(this)) {
             Logger.i(TAG, "Stoppping location tracking");
-            SmartLocation.with(this).location().stop();
+            getLocationController().stop();
         }
     }
 
     @Override
     public void onLocationUpdated(Location location) {
-
-        sLocationTimestamp = System.nanoTime();
-        sCurrentLocation = location;
-
         if (mStopList != null) {
             mStopList.onLocationUpdated(location);
+        }
+
+        sCurrentLocation = location;
+        sCurrentLocationTimestamp = System.nanoTime();
+
+        if (location.getAccuracy() < LOCATION_MIN_ACCURACY) {
+            Logger.i(TAG, "Location %s is accurate; stopping updates", location);
+            getLocationController().stop();
         }
     }
 
@@ -174,6 +175,7 @@ public abstract class StopListActivityBase extends BaseActivity
             setFragment(mStopList, FRAG_LIST);
         }
 
+        mStopList.onLocationUpdated(getLocation());
         mStopList.setCursor(cursor);
     }
 
@@ -204,6 +206,37 @@ public abstract class StopListActivityBase extends BaseActivity
         }
 
         return limit;
+    }
+
+
+    /**
+     * Get the LocationControl instace for this Context.
+     *
+     * @return the LocationControl instance
+     */
+    private SmartLocation.LocationControl getLocationController() {
+        return SmartLocation.with(this).location();
+    }
+
+    /**
+     * Retrieve the current location of the user (if any).
+     *
+     * @return the location
+     */
+    public Location getLocation() {
+        Logger.d(TAG,
+            "getLocation(): sCurrentLocation=%s, sCurrentLocationTimestamp=%s, currentTime=%s",
+            sCurrentLocation, sCurrentLocationTimestamp, System.nanoTime()
+        );
+
+        if (System.nanoTime() - sCurrentLocationTimestamp < LOCATION_MAX_AGE_NS) {
+            Logger.i(TAG, "Fulfilling location request from cache");
+            return sCurrentLocation;
+        }
+
+        Logger.i(TAG, "Could not fulfill request for location; starting tracking");
+        getLocationController().start(this);
+        return null;
     }
 
     /**

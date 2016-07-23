@@ -37,8 +37,9 @@ public class StopListFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_stop_list, container, false);
 
         Logger.i(TAG, "Creating an adapter with cursor=%s", mCursor);
-        mAdapter = new StopListAdapter(getActivity(), mCursor);
-        mAdapter.setUserLocation(StopListActivityBase.getCachedLocation());
+        StopListActivityBase activity = (StopListActivityBase) getActivity();
+        mAdapter = new StopListAdapter(activity, mCursor);
+        mAdapter.setUserLocation(activity.getLocation());
 
         // Setup the recycler
         RecyclerView recycler = (RecyclerView) root.findViewById(R.id.stop_list_recycler);
