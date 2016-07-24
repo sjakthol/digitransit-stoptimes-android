@@ -77,4 +77,5 @@
     <string name="bottom_favorites">Favorites</string>
     <string name="bottom_nearby">Nearby</string>
     <string name="acquiring_location">Acquiring Location...</string>
+    <string name="location_disabled">Location disabled</string>
 </resources>

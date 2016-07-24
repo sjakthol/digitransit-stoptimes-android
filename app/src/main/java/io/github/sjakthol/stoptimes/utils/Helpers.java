@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,17 @@ import java.util.Locale;
 public class Helpers {
     private static final String TAG = Helpers.class.getSimpleName();
 
+    public static Snackbar snackbarWithAction(
+        @NonNull View view,
+        @StringRes int msg,
+        @StringRes int action,
+        @NonNull View.OnClickListener handler)
+    {
+        Snackbar sb = Snackbar.make(view, msg, Snackbar.LENGTH_INDEFINITE);
+        sb.setAction(action, handler);
+        return sb;
+    }
+
     /**
      * Create a new Snackbar with a retry button.
      *
@@ -30,9 +42,7 @@ public class Helpers {
      * @return a new Snackbar
      */
     public static Snackbar snackbarWithRetry(View view, @StringRes int msg, View.OnClickListener handler) {
-        Snackbar sb = Snackbar.make(view, msg, Snackbar.LENGTH_INDEFINITE);
-        sb.setAction(R.string.retry, handler);
-        return sb;
+        return snackbarWithAction(view, msg, R.string.retry, handler);
     }
 
     /**

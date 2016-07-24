@@ -69,4 +69,6 @@
 
     <string name="bottom_favorites">Suosikit</string>
     <string name="bottom_nearby">Lähellä</string>
+    <string name="acquiring_location">Haetaan sijaintia...</string>
+    <string name="location_disabled">Sijainti pois käytöstä</string>
 </resources>

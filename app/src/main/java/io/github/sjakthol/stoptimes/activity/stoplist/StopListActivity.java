@@ -14,6 +14,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.generic.LoadingFragment;
+import io.github.sjakthol.stoptimes.activity.settings.SettingsActivity;
 import io.github.sjakthol.stoptimes.activity.update.StopDatabaseUpdateActivity;
 import io.github.sjakthol.stoptimes.db.task.GetFavoriteStopsTask;
 import io.github.sjakthol.stoptimes.db.task.GetNearbyStopsTask;
@@ -114,9 +115,10 @@ public class StopListActivity
             return;
         }
 
-        View bar = mBottomBar.getBar();
-        View item = bar.findViewById(R.id.bottom_nearby);
-        item.setEnabled(Helpers.shouldTrackLocation(this));
+        if (!Helpers.shouldTrackLocation(this)) {
+            mStopListSource = StopListSource.FAVORITES;
+            selectFavoritesTab();
+        }
 
         updateStopListFragment();
     }
@@ -219,12 +221,35 @@ public class StopListActivity
                 break;
 
             case R.id.bottom_nearby:
+                if (!Helpers.shouldTrackLocation(this)) {
+                    Logger.i(TAG, "Location disabled; showing message");
+                    Helpers.snackbarWithAction(
+                        findViewById(R.id.stop_list_content),
+                        R.string.location_disabled,
+                        R.string.settings,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(getBaseContext(), SettingsActivity.class));
+                            }
+                        }
+                    ).show();
+
+                    selectFavoritesTab();
+
+                    return;
+                }
+
                 mStopListSource = StopListSource.NEARBY;
                 break;
         }
 
         Logger.i(TAG, "Changing stop list source in %s", mStopListSource);
         updateStopListFragment();
+    }
+
+    private void selectFavoritesTab() {
+        mBottomBar.selectTabAtPosition(0, true);
     }
 
     @Override
