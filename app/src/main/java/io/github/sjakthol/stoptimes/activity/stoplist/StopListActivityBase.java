@@ -78,7 +78,7 @@ public abstract class StopListActivityBase extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (Helpers.shouldTrackLocation(this)) {
+        if (Helpers.shouldTrackLocation(this) && getLocation() == null) {
             Logger.i(TAG, "Starting to track user location");
             getLocationController().start(this);
         }
