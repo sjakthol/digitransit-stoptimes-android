@@ -78,4 +78,9 @@
     <string name="bottom_nearby">Nearby</string>
     <string name="acquiring_location">Acquiring Location...</string>
     <string name="location_disabled">Location disabled</string>
+    <string name="location_disabled_dialog_title">Location Disabled</string>
+    <string name="location_disabled_dialog_message">To view stops near your current location, you need to enable the
+        location services from the device settings.
+    </string>
+    <string name="location_disabled_dialog_stop_using_it">Stop Using Location</string>
 </resources>

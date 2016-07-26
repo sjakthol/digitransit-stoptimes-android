@@ -1,11 +1,13 @@
 package io.github.sjakthol.stoptimes.activity.stoplist;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -240,6 +242,10 @@ public class StopListActivity
                     return;
                 }
 
+                if (!getLocationController().state().locationServicesEnabled()) {
+                    showLocationDisabledDialog();
+                }
+
                 mStopListSource = StopListSource.NEARBY;
                 break;
         }
@@ -255,6 +261,30 @@ public class StopListActivity
     @Override
     public void onMenuTabReSelected(@IdRes int menuItemId) {
         // No-op
+    }
+
+    /**
+     * Show a dialog that informs the user the location services are disabled.
+     */
+    private void showLocationDisabledDialog() {
+        AlertDialog alert = new AlertDialog.Builder(this)
+            .setTitle(R.string.location_disabled_dialog_title)
+            .setMessage(R.string.location_disabled_dialog_message)
+            .setCancelable(false)
+            .setNegativeButton(R.string.location_disabled_dialog_stop_using_it, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    Helpers.disableLocation(StopListActivity.this);
+                    StopListActivity.this.recreate();
+                }
+            })
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            }).create();
+
+        alert.show();
     }
 
 }

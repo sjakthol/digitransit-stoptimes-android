@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -34,7 +33,7 @@ public abstract class StopListActivityBase extends BaseActivity
     private static final float LOCATION_MIN_ACCURACY = 100;
 
     // 3 minutes
-    private static final long LOCATION_MAX_AGE_NS = 3 * 60 * 1000 * 1000 * 1000L;;
+    private static final long LOCATION_MAX_AGE_NS = 3 * 60 * 1000 * 1000 * 1000L;
 
     /**
      * The last received user location.
@@ -214,7 +213,7 @@ public abstract class StopListActivityBase extends BaseActivity
      *
      * @return the LocationControl instance
      */
-    private SmartLocation.LocationControl getLocationController() {
+    SmartLocation.LocationControl getLocationController() {
         return SmartLocation.with(this).location();
     }
 

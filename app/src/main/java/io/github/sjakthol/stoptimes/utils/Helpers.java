@@ -73,18 +73,22 @@ public class Helpers {
      * @param context the application context
      */
     public static void maybeDisableUseLocation(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String key = context.getString(R.string.pref_key_use_location);
-
         boolean isEnabled = shouldTrackLocation(context);
         boolean hasPermission = Helpers.checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (isEnabled && !hasPermission) {
             Logger.i(TAG, "Location access revoked; disabling location usage");
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(key, false);
-            editor.apply();
+            disableLocation(context);
         }
+    }
+
+    public static void disableLocation(Context context) {
+        Logger.i(TAG, "Disabling location usage preference");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String key = context.getString(R.string.pref_key_use_location);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, false);
+        editor.apply();
     }
 
     /**

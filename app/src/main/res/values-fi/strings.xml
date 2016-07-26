@@ -71,4 +71,9 @@
     <string name="bottom_nearby">Lähellä</string>
     <string name="acquiring_location">Haetaan sijaintia...</string>
     <string name="location_disabled">Sijainti pois käytöstä</string>
+    <string name="location_disabled_dialog_stop_using_it">Älä käytä sijaintia</string>
+    <string name="location_disabled_dialog_title">Sijainti ei käytössä</string>
+    <string name="location_disabled_dialog_message">Jos haluat etsiä pysäkkejä sijaintisi perusteella, ota
+        sijaintipalvelut käyttöön laitteen asetuksista.
+    </string>
 </resources>
