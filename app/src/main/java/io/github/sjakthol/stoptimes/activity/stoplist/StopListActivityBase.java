@@ -229,6 +229,11 @@ public abstract class StopListActivityBase extends BaseActivity
             sCurrentLocation, sCurrentLocationTimestamp, System.nanoTime()
         );
 
+        if (!Helpers.shouldTrackLocation(this)) {
+            // Don't return any location if tracking is disabled
+            return null;
+        }
+
         if (System.nanoTime() - sCurrentLocationTimestamp < LOCATION_MAX_AGE_NS) {
             Logger.i(TAG, "Fulfilling location request from cache");
             return sCurrentLocation;
