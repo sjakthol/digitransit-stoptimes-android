@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
-public class DatabaseTestCase extends InstrumentationTestCase {
+public class DatabaseTestCase {
     protected StopListDatabaseHelper mDbHelper;
 
     @Before
@@ -55,8 +55,8 @@ public class DatabaseTestCase extends InstrumentationTestCase {
         data.put(COLUMN_NAME_GTFS_ID, "HSL:2111552");
         data.put(StopListContract.Stop.COLUMN_NAME_NAME, "Leppävaara");
         data.put(StopListContract.Stop.COLUMN_NAME_CODE, "E1058");
-        data.put(StopListContract.Stop.COLUMN_NAME_LAT, 219477);
-        data.put(StopListContract.Stop.COLUMN_NAME_LON, 813224);
+        data.put(StopListContract.Stop.COLUMN_NAME_LAT, 21.9477);
+        data.put(StopListContract.Stop.COLUMN_NAME_LON, 81.3224);
         data.put(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE, 109);
         data.put(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE, "2");
         db.insert(STOPS_TABLE_NAME, null, data);
