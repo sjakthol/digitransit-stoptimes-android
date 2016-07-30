@@ -93,6 +93,16 @@ public abstract class StopListActivityBase extends BaseActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Close any leftover database connections
+        if (mDatabaseHelper != null) {
+            mDatabaseHelper.close();
+        }
+    }
+
+    @Override
     public void onLocationUpdated(Location location) {
         if (mStopList != null) {
             mStopList.onLocationUpdated(location);

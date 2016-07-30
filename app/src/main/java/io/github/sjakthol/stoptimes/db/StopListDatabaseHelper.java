@@ -60,6 +60,8 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     public StopListDatabaseHelper(Context context) {
         // In-memory db for tests
         super(context, Helpers.isInJUnitTest() ? null : DATABASE_NAME, null, DATABASE_VERSION);
+
+        Logger.i(TAG, "Using database at %s", this.getDatabaseName());
     }
 
     @Override
@@ -72,5 +74,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Logger.i(TAG, "Upgrading db from v%d to v%d", oldVersion, newVersion);
+
+        // TODO: Implement
     }
 }

@@ -23,6 +23,7 @@ import io.github.sjakthol.stoptimes.utils.NetworkRequiredException;
 public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnectionFragment.OnConnectionAvailable {
     private static final String TAG = StopDatabaseUpdateActivity.class.getSimpleName();
     private static final String FRAG_LOADING = "FRAG_LOADING";
+    private StopListDatabaseHelper mDbHelper;
 
     public StopDatabaseUpdateActivity() {
         super(R.id.main_content);
@@ -35,7 +36,18 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
         setContentView(R.layout.activity_stop_database_update);
         setToolbar(R.id.toolbar);
 
+        mDbHelper = new StopListDatabaseHelper(this);
+
         startUpdate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mDbHelper != null) {
+            mDbHelper.close();
+        }
     }
 
     private void showLoadingIndicator() {
@@ -48,7 +60,7 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
         Logger.i(TAG, "Starting update");
         showLoadingIndicator();
 
-        new UpdateDatabaseTask(this, new StopListDatabaseHelper(this)) {
+        new UpdateDatabaseTask(this, mDbHelper) {
             @Override
             protected void onPostExecute(AsyncTaskResult<Void> res) {
                 super.onPostExecute(res);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 import android.test.InstrumentationTestCase;
+import org.junit.After;
 import org.junit.Before;
 
 import static io.github.sjakthol.stoptimes.db.StopListContract.Stop.COLUMN_NAME_GTFS_ID;
@@ -27,6 +28,13 @@ public class DatabaseTestCase {
 
         // Populate the db
         mDbHelper.getWritableDatabase();
+    }
+
+    @After
+    public void cleanup_dbHelper() {
+        if (mDbHelper != null) {
+            mDbHelper.close();
+        }
     }
 
     protected void setup_insertData() {
