@@ -22,7 +22,7 @@ import java.util.Vector;
 public class DigitransitApi {
     private static final String TAG = "DigitransitApi";
     private static final String API_HOST = "https://api.digitransit.fi";
-    private static final String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
+    static String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
     private static final String QUERY_DEPARTURES =
         "query ($stop: String!, $departures: Int) {\n" +
         "  stop(id: $stop) {\n" +
@@ -42,6 +42,13 @@ public class DigitransitApi {
         "  }\n" +
         "}";
 
+    private static final String QUERY_STOPS =
+        "query {" +
+        "  stops {" +
+        "    gtfsId, name, lat, lon, code, vehicleType, platformCode" +
+        "  }" +
+        "}";
+
     public static final short WAIT_TIMEOUT = 60;
 
     /**
@@ -50,8 +57,7 @@ public class DigitransitApi {
      * @return a Future that resolves with a JSONObject that contains all known stops as data.stops.
      */
     public static RequestFuture<JSONObject> getAllStops(Context ctx) throws JSONException {
-        String query = "query {stops { gtfsId, name, lat, lon, code, vehicleType, platformCode } }";
-        JSONObject body = buildGraphQLQuery(query, null);
+        JSONObject body = buildGraphQLQuery(QUERY_STOPS, null);
 
         Logger.i(TAG, "Fetching a list of all stops from Digitransit");
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -124,7 +130,7 @@ public class DigitransitApi {
      * @return a list of Departures
      * @throws JSONException if the response JSON has unexpected format or is missing fields
      */
-    private static Vector<Departure> parseDepartureList(JSONObject response) throws JSONException {
+    static Vector<Departure> parseDepartureList(JSONObject response) throws JSONException {
         JSONObject data = response.getJSONObject("data");
         JSONObject stop = data.getJSONObject("stop");
         JSONArray raw = stop.getJSONArray("stoptimesWithoutPatterns");
@@ -145,7 +151,7 @@ public class DigitransitApi {
      * @param variables the variables
      * @return the request body
      */
-    private static JSONObject buildGraphQLQuery(String query, @Nullable HashMap<String, String> variables)
+    static JSONObject buildGraphQLQuery(String query, @Nullable HashMap<String, String> variables)
             throws JSONException
     {
         JSONObject req = new JSONObject();
