@@ -22,7 +22,7 @@ import java.util.Vector;
 public class DigitransitApi {
     private static final String TAG = "DigitransitApi";
     private static final String API_HOST = "https://api.digitransit.fi";
-    static String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
+    public static String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
     private static final String QUERY_DEPARTURES =
         "query ($stop: String!, $departures: Int) {\n" +
         "  stop(id: $stop) {\n" +

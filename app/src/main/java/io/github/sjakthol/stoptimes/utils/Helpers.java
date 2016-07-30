@@ -78,16 +78,16 @@ public class Helpers {
 
         if (isEnabled && !hasPermission) {
             Logger.i(TAG, "Location access revoked; disabling location usage");
-            disableLocation(context);
+            setUseLocation(context, false);
         }
     }
 
-    public static void disableLocation(Context context) {
-        Logger.i(TAG, "Disabling location usage preference");
+    public static void setUseLocation(Context context, boolean useIt) {
+        Logger.i(TAG, "Settings use_location to %b", useIt);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String key = context.getString(R.string.pref_key_use_location);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(key, false);
+        editor.putBoolean(key, useIt);
         editor.apply();
     }
 

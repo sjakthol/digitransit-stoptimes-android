@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
-import static io.github.sjakthol.stoptimes.digitransit.MockData.MOCK_STOPS;
 import static io.github.sjakthol.stoptimes.digitransit.MockData.NUM_MOCK_DEPARTURES;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;

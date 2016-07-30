@@ -274,7 +274,7 @@ public class StopListActivity
             .setNegativeButton(R.string.location_disabled_dialog_stop_using_it, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
-                    Helpers.disableLocation(StopListActivity.this);
+                    Helpers.setUseLocation(StopListActivity.this, false);
                     StopListActivity.this.recreate();
                 }
             })
