@@ -118,8 +118,8 @@ public class StopSearchActivity extends StopListActivityBase
      */
     private void showSearchExplanation() {
         showMessage(
-            R.string.stoplist_empty_empty_query_title,
-            R.string.stoplist_empty_empty_query_description
+            R.string.stoplist_search_title,
+            R.string.stoplist_search_description
         );
     }
 
@@ -128,8 +128,8 @@ public class StopSearchActivity extends StopListActivityBase
      */
     private void showEmptyResultsExplanation() {
         showMessage(
-            R.string.stoplist_empty_query_title,
-            R.string.stoplist_empty_query_description
+            R.string.stoplist_search_empty_title,
+            R.string.stoplist_search_empty_description
         );
     }
 }

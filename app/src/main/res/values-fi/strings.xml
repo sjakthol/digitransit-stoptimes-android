@@ -47,14 +47,14 @@
     <string name="stop_location_vantaa">Vantaa</string>
     <string name="stop_name_with_platform">%1$s, laituri %2$s</string>
     <string name="stop_name_with_track">%1$s, raide %2$s</string>
-    <string name="stoplist_empty_empty_query_description">Suodata pysäkkilistaa nimen perusteella.</string>
-    <string name="stoplist_empty_empty_query_title">Etsi pysäkkejä</string>
+    <string name="stoplist_search_description">Suodata pysäkkilistaa nimen perusteella.</string>
+    <string name="stoplist_search_title">Etsi pysäkkejä</string>
     <string name="stoplist_empty_favorites_description">Aloita etsimällä usein käyttämiäsi pysäkkejä ja lisää ne
         suosikkeihin.
     </string>
     <string name="stoplist_empty_favorites_title">Suosikkipysäkit</string>
-    <string name="stoplist_empty_query_description">Haku ei vastaa yhtään pysäkkiä.</string>
-    <string name="stoplist_empty_query_title">Pysäkkejä ei löytynyt</string>
+    <string name="stoplist_search_empty_description">Haku ei vastaa yhtään pysäkkiä.</string>
+    <string name="stoplist_search_empty_title">Pysäkkejä ei löytynyt</string>
     <string name="stoplist_search_hint">Etsi pysäkkejä…</string>
     <string name="unexpected_error_message">Jotain odottamatonta tapahtui ja viimeisin toimenpide epäonnistui. Jos
         näet tämän virheen useita kertoja, jotain on pahasti vialla.

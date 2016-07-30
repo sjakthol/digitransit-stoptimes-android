@@ -20,11 +20,11 @@
     <string name="stoplist_empty_favorites_description">To get started, use the search to find the stops you care
         about and add them to your favorites.
     </string>
-    <string name="stoplist_empty_query_title">No Stops Found</string>
-    <string name="stoplist_empty_query_description">The current query did not match any stops.</string>
+    <string name="stoplist_search_empty_title">No Stops Found</string>
+    <string name="stoplist_search_empty_description">The current query did not match any stops.</string>
 
-    <string name="stoplist_empty_empty_query_title">Search Stops</string>
-    <string name="stoplist_empty_empty_query_description">Use the stop name to filter down the list of stops.</string>
+    <string name="stoplist_search_title">Search Stops</string>
+    <string name="stoplist_search_description">Use the stop name to filter down the list of stops.</string>
 
     <string name="stop_name_with_platform">%1$s, Platform %2$s</string>
     <string name="stop_name_with_track">%1$s, Track %2$s</string>
