@@ -31,7 +31,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     private static final String INT_TYPE = " INTEGER";
     private static final String COMMA_SEP = ", ";
     private static final String SQL_CREATE_STOPS_TABLE =
-        "CREATE TABLE " + StopListContract.Stop.STOPS_TABLE_NAME + " (" +
+        "CREATE TABLE IF NOT EXISTS " + StopListContract.Stop.STOPS_TABLE_NAME + " (" +
             StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_CODE + TEXT_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
@@ -46,7 +46,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
         " )";
 
     private static final String SQL_CREATE_STATIONS_TABLE =
-        "CREATE TABLE " + StopListContract.Stop.STATIONS_TABLE_NAME + " (" +
+        "CREATE TABLE IF NOT EXISTS " + StopListContract.Stop.STATIONS_TABLE_NAME + " (" +
             StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_CODE + TEXT_TYPE + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
@@ -61,7 +61,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String SQL_CREATE_FAVORITES_TABLE =
-        "CREATE TABLE " + StopListContract.Stop.FAVORITES_TABLE_NAME + " (" +
+        "CREATE TABLE IF NOT EXISTS " + StopListContract.Stop.FAVORITES_TABLE_NAME + " (" +
             StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
             StopListContract.Stop.COLUMN_NAME_IS_FAVORITE + INT_TYPE + " DEFAULT 1" + COMMA_SEP +
             " FOREIGN KEY(" + StopListContract.Stop.COLUMN_NAME_GTFS_ID + ") REFERENCES " +
@@ -92,6 +92,12 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Logger.i(TAG, "Upgrading db from v%d to v%d", oldVersion, newVersion);
 
-        // TODO: Implement
+        if (oldVersion == 1 && newVersion == 2) {
+            // Just drop the old table with the old schema
+            db.execSQL("DROP TABLE " + StopListContract.Stop.STOPS_TABLE_NAME);
+
+            // ...and make it look like we just created the table
+            this.onCreate(db);
+        }
     }
 }
