@@ -76,4 +76,7 @@
     <string name="location_disabled_dialog_message">Jos haluat etsiä pysäkkejä sijaintisi perusteella, ota
         sijaintipalvelut käyttöön laitteen asetuksista.
     </string>
+    <string name="station_generic">Terminaali</string>
+    <string name="station_subway">Metroasema</string>
+    <string name="station_train">Juna-asema</string>
 </resources>
