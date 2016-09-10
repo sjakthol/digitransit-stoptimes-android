@@ -17,13 +17,23 @@ public class GetNearbyStopsTask extends QueryStopsDatabaseTask<Bundle> {
     private static final String BUNDLE_LIMIT = "BUNDLE_LIMIT";
 
     private static final String SQL_QUERY =
-        "SELECT " +
-            TextUtils.join(", ", STOP_QUERY_COLUMNS) + ", " +
-            "(? - lat) * (? - lat) + (? - lon) * (? - lon) as distance_estimate" +
+        "SELECT * FROM (" +
+            "SELECT " +
+                TextUtils.join(", ", STOP_QUERY_COLUMNS) + ", " +
+                "(? - lat) * (? - lat) + (? - lon) * (? - lon) as distance_estimate" +
             " FROM " +
                 StopListContract.Stop.STOPS_TABLE_NAME +
             " NATURAL LEFT JOIN " +
                 StopListContract.Stop.FAVORITES_TABLE_NAME +
+            " UNION " +
+            "SELECT " +
+                TextUtils.join(", ", STATION_QUERY_COLUMNS) + ", " +
+                "(? - lat) * (? - lat) + (? - lon) * (? - lon) as distance_estimate" +
+            " FROM " +
+                StopListContract.Stop.STATIONS_TABLE_NAME +
+            " NATURAL LEFT JOIN " +
+                StopListContract.Stop.FAVORITES_TABLE_NAME +
+        ") " +
         " ORDER BY distance_estimate " +
         " LIMIT ?";
 
@@ -47,7 +57,7 @@ public class GetNearbyStopsTask extends QueryStopsDatabaseTask<Bundle> {
         String lat = String.valueOf(location.getLatitude());
         String lon = String.valueOf(location.getLongitude());
 
-        String[] args = {lat, lat, lon, lon, limit};
+        String[] args = {lat, lat, lon, lon, lat, lat, lon, lon, limit};
 
         return db.rawQuery(SQL_QUERY, args);
     }

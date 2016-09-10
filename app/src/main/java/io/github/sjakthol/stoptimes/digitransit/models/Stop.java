@@ -325,4 +325,25 @@ public class Stop {
     public String getParentStation() {
         return mParentStation;
     }
+
+    /**
+     * The type of the station (if this is a station).
+     *
+     * @return a string that can be used in the UI to show the type
+     * of the station
+     */
+    public String getStationType(Resources res) {
+        if (!getLocationType().equals("STATION")) {
+            return null;
+        }
+
+        switch (getVehicleType()) {
+            case COMMUTER_TRAIN:
+                return res.getString(R.string.station_train);
+            case SUBWAY:
+                return res.getString(R.string.station_subway);
+            default:
+                return res.getString(R.string.station_generic);
+        }
+    }
 }

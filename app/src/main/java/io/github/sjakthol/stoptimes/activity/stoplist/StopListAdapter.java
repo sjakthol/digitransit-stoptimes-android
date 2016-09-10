@@ -178,9 +178,24 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
 
         if (stop.getCode().equals("null")) {
             // The stop doesn't have a code which means we cannot
-            // determine the city it resides in. Hide the labels.
-            viewHolder.getStopCode().setVisibility(View.INVISIBLE);
-            viewHolder.getStopCity().setVisibility(View.INVISIBLE);
+            // determine the city it resides in.
+
+            String stationType = stop.getStationType(viewHolder.getRootView().getResources());
+
+            if (stationType == null) {
+                // Hide the labes for stops.
+                viewHolder.getStopCode().setVisibility(View.GONE);
+                viewHolder.getStopCity().setVisibility(View.GONE);
+            } else {
+                // Stations don't have a code we could use to determine the
+                // city it belongs to. Instead, show a label that identifies
+                // it as a station in the first text box and hide the second
+                viewHolder.getStopCity().setVisibility(View.VISIBLE);
+                viewHolder.getStopCity().setText(stationType);
+
+                // Hide the second label
+                viewHolder.getStopCode().setVisibility(View.GONE);
+            }
         } else {
             // We have a code, show them
             viewHolder.getStopCode().setText(stop.getCode());

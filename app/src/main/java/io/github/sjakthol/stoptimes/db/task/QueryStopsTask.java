@@ -2,9 +2,13 @@ package io.github.sjakthol.stoptimes.db.task;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.db.StopListContract;
 import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
+import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
 /**
@@ -16,8 +20,10 @@ import io.github.sjakthol.stoptimes.utils.Logger;
  * These MUST be given to the .execute(query, limit) method.
  *
  */
-public class QueryStopsTask extends QueryStopsDatabaseTask<String> {
+public class QueryStopsTask extends QueryStopsDatabaseTask<Bundle> {
     private static final String TAG = QueryStopsTask.class.getSimpleName();
+    private static final String BUNDLE_QUERY = "BUNDLE_QUERY";
+    private static final String BUNDLE_LIMIT = "BUNDLE_LIMIT";
 
     /**
      * Create a DatabaseTask for the given StopListDatabaseHelper.
@@ -29,24 +35,35 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<String> {
     }
 
     private static final String SQL_QUERY_STOPS =
-        "SELECT " + TextUtils.join(", ", STOP_QUERY_COLUMNS) +
-        " FROM " + StopListContract.Stop.STOPS_TABLE_NAME +
-        " NATURAL LEFT JOIN " + StopListContract.Stop.FAVORITES_TABLE_NAME +
-        " WHERE " + StopListContract.Stop.COLUMN_NAME_NAME + " LIKE ?" +
-        " ORDER BY " + StopListContract.Stop.COLUMN_NAME_NAME +
-        " LIMIT %s";
+        "SELECT * FROM (" +
+            "SELECT " + TextUtils.join(", ", STOP_QUERY_COLUMNS) +
+            " FROM " + StopListContract.Stop.STOPS_TABLE_NAME +
+            " NATURAL LEFT JOIN " + StopListContract.Stop.FAVORITES_TABLE_NAME +
+            " WHERE " + StopListContract.Stop.COLUMN_NAME_NAME + " LIKE ?" +
+            "   AND " + StopListContract.Stop.COLUMN_NAME_PARENT_STATION + " IS NULL" +
+            " UNION " +
+            "SELECT " + TextUtils.join(", ", STATION_QUERY_COLUMNS) +
+            " FROM " + StopListContract.Stop.STATIONS_TABLE_NAME +
+            " NATURAL LEFT JOIN " + StopListContract.Stop.FAVORITES_TABLE_NAME +
+            " WHERE " + StopListContract.Stop.COLUMN_NAME_NAME + " LIKE ?" +
+            ") " +
+            "ORDER BY " +
+                StopListContract.Stop.COLUMN_NAME_NAME +
+            " LIMIT ?";
 
     @Override
-    public Cursor runTask(SQLiteDatabase db, String... params) {
-        if (params.length != 2) throw new AssertionError(".execute(query, limit) requires two params");
+    public Cursor runTask(SQLiteDatabase db, Bundle... params) {
+        Bundle data = params[0];
 
-        String qs = prepareQueryString(params[0]);
-        String[] selection = {qs};
-        String limit = params[1];
+        String rawQuery = data.getString(BUNDLE_QUERY);
+        String query = prepareQueryString(rawQuery);
+        String limit = data.getString(BUNDLE_LIMIT);
 
-        Logger.d(TAG, "Running stoplist query: query='%s', limit='%s'", qs, limit);
+        Logger.d(TAG, "Running query: query='%s', limit='%s'",
+                query, limit);
 
-        return db.rawQuery(String.format(SQL_QUERY_STOPS, limit), selection);
+        String[] selection = {query, query, limit};
+        return db.rawQuery(SQL_QUERY_STOPS, selection);
     }
 
     /**
@@ -61,5 +78,18 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<String> {
         }
 
         return String.format("%%%s%%", query);
+    }
+
+    /**
+     * Get the stops matching the query
+     *
+     * @param query the query string
+     * @param limit the number of results to show
+     */
+    public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(String query, String limit) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_QUERY, query);
+        bundle.putString(BUNDLE_LIMIT, limit);
+        return this.execute(bundle);
     }
 }

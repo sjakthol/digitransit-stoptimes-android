@@ -83,4 +83,7 @@
         location services from the device settings.
     </string>
     <string name="location_disabled_dialog_stop_using_it">Stop Using Location</string>
+    <string name="station_train">Train Station</string>
+    <string name="station_subway">Subway Station</string>
+    <string name="station_generic">Terminal</string>
 </resources>

@@ -20,12 +20,21 @@ public class GetFavoriteStopsTask extends QueryStopsDatabaseTask<Void> {
     }
 
     private static final String GET_FAVORITES_SQL =
-        "SELECT " +
-            TextUtils.join(", ", STOP_QUERY_COLUMNS) +
-        " FROM " +
-            StopListContract.Stop.STOPS_TABLE_NAME +
-        " NATURAL INNER JOIN " +
-            StopListContract.Stop.FAVORITES_TABLE_NAME +
+        "SELECT * FROM (" +
+            "SELECT " +
+                TextUtils.join(", ", STOP_QUERY_COLUMNS) +
+            " FROM " +
+                StopListContract.Stop.STOPS_TABLE_NAME +
+            " NATURAL INNER JOIN " +
+                StopListContract.Stop.FAVORITES_TABLE_NAME +
+            " UNION " +
+            "SELECT " +
+                TextUtils.join(", ", STATION_QUERY_COLUMNS) +
+            " FROM " +
+                StopListContract.Stop.STATIONS_TABLE_NAME +
+            " NATURAL INNER JOIN " +
+                StopListContract.Stop.FAVORITES_TABLE_NAME +
+        ")" +
         " ORDER BY " +
             StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE + ", " +
             StopListContract.Stop.COLUMN_NAME_NAME;
