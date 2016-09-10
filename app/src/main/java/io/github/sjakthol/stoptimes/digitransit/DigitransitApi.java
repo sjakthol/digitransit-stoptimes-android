@@ -23,9 +23,28 @@ public class DigitransitApi {
     private static final String TAG = "DigitransitApi";
     private static final String API_HOST = "https://api.digitransit.fi";
     public static String API_GRAPHQL = API_HOST + "/routing/v1/routers/hsl/index/graphql";
-    private static final String QUERY_DEPARTURES =
+    private static final String QUERY_DEPARTURES_OF_STOP =
         "query ($stop: String!, $departures: Int) {\n" +
         "  stop(id: $stop) {\n" +
+        "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
+        "      realtime,\n" +
+        "      serviceDay,\n" +
+        "      scheduledDeparture,\n" +
+        "      realtimeDeparture,\n" +
+        "      trip {\n" +
+        "        route {\n" +
+        "          shortName,\n" +
+        "          type\n" +
+        "        }\n" +
+        "        tripHeadsign\n" +
+        "      }\n" +
+        "    }\n" +
+        "  }\n" +
+        "}";
+
+    private static final String QUERY_DEPARTURES_OF_STATION =
+        "query ($stop: String!, $departures: Int) {\n" +
+        "  station(id: $stop) {\n" +
         "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
         "      serviceDay,\n" +
@@ -78,22 +97,27 @@ public class DigitransitApi {
 
     /**
      * Fetch the next departures from the Digitransit API for the given stop.
-     *
-     * @param ctx application context
+     *  @param ctx application context
      * @param stopId GTFS ID of the stop
+     * @param locationType the type of the stop
      * @param numDepartures the number of departures to fetch
      * @param listener a DepartureResponseListener for the request
      */
     public static void getDepartures(
         final Context ctx,
         final String stopId,
+        String locationType,
         final int numDepartures,
-        final DepartureResponseListener listener) throws JSONException {
+        final DepartureResponseListener listener)
+    throws JSONException {
         HashMap<String, String> vars = new HashMap<>();
         vars.put("stop", stopId);
         vars.put("departures", String.valueOf(numDepartures));
 
-        JSONObject body = buildGraphQLQuery(QUERY_DEPARTURES, vars);
+        String query = locationType.equals("STATION") ?
+            QUERY_DEPARTURES_OF_STATION : QUERY_DEPARTURES_OF_STOP;
+
+        JSONObject body = buildGraphQLQuery(query, vars);
 
         Logger.i(TAG, "Fetching %d departures for %s", numDepartures, stopId);
         Logger.d(TAG, "%s", body);
@@ -135,8 +159,14 @@ public class DigitransitApi {
      */
     static Vector<Departure> parseDepartureList(JSONObject response) throws JSONException {
         JSONObject data = response.getJSONObject("data");
-        JSONObject stop = data.getJSONObject("stop");
-        JSONArray raw = stop.getJSONArray("stoptimesWithoutPatterns");
+        JSONObject stop = data.optJSONObject("stop");
+        JSONObject station = data.optJSONObject("station");
+        if (stop == null && station == null) {
+            throw new JSONException("No stop or station in data");
+        }
+
+        JSONObject stopOrStation = stop == null ? station : stop;
+        JSONArray raw = stopOrStation.getJSONArray("stoptimesWithoutPatterns");
 
         // Add a sane default capacity.
         Vector<Departure> res = new Vector<>(20);

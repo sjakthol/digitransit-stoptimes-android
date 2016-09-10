@@ -135,6 +135,7 @@ public abstract class StopListActivityBase extends BaseActivity
         Intent i = new Intent(this, DepartureListActivity.class);
         i.putExtra(DepartureListActivity.EXTRA_STOP_ID, stop.getId());
         i.putExtra(DepartureListActivity.EXTRA_STOP_NAME, stop.formatStopName(getResources()));
+        i.putExtra(DepartureListActivity.EXTRA_STOP_TYPE, stop.getLocationType());
         startActivity(i);
     }
 

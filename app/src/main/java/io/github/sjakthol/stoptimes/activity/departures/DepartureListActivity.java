@@ -32,6 +32,7 @@ public class DepartureListActivity extends BaseActivity implements
     private static final String FRAG_DEPARTURE_LIST = "FRAG_DEPARTURE_LIST";
 
     public static final String EXTRA_STOP_ID = "EXTRA_STOP_ID";
+    public static final String EXTRA_STOP_TYPE = "EXTRA_STOP_TYPE";
     public static final String EXTRA_STOP_NAME = "EXTRA_STOP_NAME";
 
     /**
@@ -44,6 +45,11 @@ public class DepartureListActivity extends BaseActivity implements
      * the departures.
      */
     private DepartureListFragment mDepartureList;
+
+    /**
+     * The type of the stop (STOP vs STATION)
+     */
+    private String mLocationType;
 
     public DepartureListActivity() {
         super(R.id.departure_list_content);
@@ -70,6 +76,7 @@ public class DepartureListActivity extends BaseActivity implements
         }
 
         mStopId = getIntent().getStringExtra(EXTRA_STOP_ID);
+        mLocationType = getIntent().getStringExtra(EXTRA_STOP_TYPE);
 
         // Update will be triggered by onResume()
     }
@@ -202,7 +209,7 @@ public class DepartureListActivity extends BaseActivity implements
 
         Logger.i(TAG, "Fetching departures from Digitransit");
         try {
-            DigitransitApi.getDepartures(this, mStopId, getNumDepartures(), this);
+            DigitransitApi.getDepartures(this, mStopId, mLocationType, getNumDepartures(), this);
         } catch (JSONException e) {
             // This can happen if getNumDepartures() is infinity or NaN. If
             // it does, YOLO!

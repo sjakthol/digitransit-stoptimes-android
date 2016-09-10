@@ -65,35 +65,35 @@ public class DigitransitApiTest {
         final CountDownLatch latch = new CountDownLatch(1);
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
-            "HSL:1234", 10,
-            new DigitransitApi.DepartureResponseListener() {
-                @Override
-                public void onDeparturesAvailable(Vector<Departure> departures) {
-                    assertThat("got departures", departures.size(), is(NUM_MOCK_DEPARTURES));
+            "HSL:1234", "STOP",
+                10,
+                new DigitransitApi.DepartureResponseListener() {
+                    @Override
+                    public void onDeparturesAvailable(Vector<Departure> departures) {
+                        assertThat("got departures", departures.size(), is(NUM_MOCK_DEPARTURES));
 
-                    try {
-                        RecordedRequest req = server.takeRequest();
-                        assertThat("request path correct", req.getPath(), is("/GRAPHQL"));
+                        try {
+                            RecordedRequest req = server.takeRequest();
+                            assertThat("request path correct", req.getPath(), is("/GRAPHQL"));
 
-                        JSONObject body = new JSONObject(req.getBody().readUtf8());
-                        JSONObject var = body.getJSONObject("variables");
+                            JSONObject body = new JSONObject(req.getBody().readUtf8());
+                            JSONObject var = body.getJSONObject("variables");
 
-                        assertThat("body has correct stop", var.getString("stop"), is("HSL:1234"));
-                        assertThat("body has correct limit", var.getString("departures"), is("10"));
-                    } catch (Exception e) {
-                        assertThat(e.toString(), false, is(true));
+                            assertThat("body has correct stop", var.getString("stop"), is("HSL:1234"));
+                            assertThat("body has correct limit", var.getString("departures"), is("10"));
+                        } catch (Exception e) {
+                            assertThat(e.toString(), false, is(true));
+                        }
+
+                        latch.countDown();
                     }
 
-                    latch.countDown();
-                }
-
-                @Override
-                public void onDepartureLoadError(VolleyError error) {
-                    assertThat("unexpected error " + error.toString(), true, is(false));
-                    latch.countDown();
-                }
-            }
-        );
+                    @Override
+                    public void onDepartureLoadError(VolleyError error) {
+                        assertThat("unexpected error " + error.toString(), true, is(false));
+                        latch.countDown();
+                    }
+                });
 
         latch.await();
 
@@ -112,20 +112,20 @@ public class DigitransitApiTest {
         final CountDownLatch latch = new CountDownLatch(1);
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
-            "HSL:1234", 10, new DigitransitApi.DepartureResponseListener() {
-                @Override
-                public void onDeparturesAvailable(Vector<Departure> departures) {
-                    assertThat("unexpected success ", true, is(false));
-                    latch.countDown();
-                }
+            "HSL:1234", "STOP", 10,
+                new DigitransitApi.DepartureResponseListener() {
+                    @Override
+                    public void onDeparturesAvailable(Vector<Departure> departures) {
+                        assertThat("unexpected success ", true, is(false));
+                        latch.countDown();
+                    }
 
-                @Override
-                public void onDepartureLoadError(VolleyError error) {
-                    assertThat("got JSON error", error.getCause() instanceof JSONException, is(true));
-                    latch.countDown();
-                }
-            }
-        );
+                    @Override
+                    public void onDepartureLoadError(VolleyError error) {
+                        assertThat("got JSON error", error.getCause() instanceof JSONException, is(true));
+                        latch.countDown();
+                    }
+                });
 
         latch.await();
     }
@@ -144,20 +144,20 @@ public class DigitransitApiTest {
         final CountDownLatch latch = new CountDownLatch(1);
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
-            "HSL:1234", 10, new DigitransitApi.DepartureResponseListener() {
-                @Override
-                public void onDeparturesAvailable(Vector<Departure> departures) {
-                    assertThat("unexpected success ", true, is(false));
-                    latch.countDown();
-                }
+            "HSL:1234", "STOP", 10,
+                new DigitransitApi.DepartureResponseListener() {
+                    @Override
+                    public void onDeparturesAvailable(Vector<Departure> departures) {
+                        assertThat("unexpected success ", true, is(false));
+                        latch.countDown();
+                    }
 
-                @Override
-                public void onDepartureLoadError(VolleyError error) {
-                    assertThat("got error", error, is(notNullValue()));
-                    latch.countDown();
-                }
-            }
-        );
+                    @Override
+                    public void onDepartureLoadError(VolleyError error) {
+                        assertThat("got error", error, is(notNullValue()));
+                        latch.countDown();
+                    }
+                });
 
         latch.await();
     }
