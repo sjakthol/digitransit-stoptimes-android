@@ -12,10 +12,11 @@ import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import org.hamcrest.CoreMatchers;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
@@ -24,7 +25,6 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class UpdateDatabaseTaskTest extends DatabaseTestCase {
@@ -39,7 +39,8 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
             "        \"lon\": 24.813224,\n" +
             "        \"lat\": 60.219477,\n" +
             "        \"name\": \"Leppävaara\",\n" +
-            "        \"gtfsId\": \"HSL:2111552\"\n" +
+            "        \"gtfsId\": \"HSL:2111552\",\n" +
+            "        \"locationType\": \"STOP\"\n" +
             "      },\n" +
             "      {\n" +
             "        \"platformCode\": null,\n" +
@@ -48,7 +49,8 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
             "        \"lon\": 24.375928,\n" +
             "        \"lat\": 60.201517,\n" +
             "        \"name\": \"Kamppi 2\",\n" +
-            "        \"gtfsId\": \"HSL:6150218\"\n" +
+            "        \"gtfsId\": \"HSL:6150218\",\n" +
+            "        \"locationType\": \"STOP\"\n" +
             "      },\n" +
             "      {\n" +
             "        \"platformCode\": null,\n" +
@@ -57,7 +59,8 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
             "        \"lon\": 24.931515,\n" +
             "        \"lat\": 60.168901,\n" +
             "        \"name\": \"Kamppi\",\n" +
-            "        \"gtfsId\": \"HSL:1040602\"\n" +
+            "        \"gtfsId\": \"HSL:1040602\",\n" +
+            "        \"locationType\": \"STOP\"\n" +
             "      }\n" +
             "    ]\n" +
             "  }\n" +
@@ -93,7 +96,7 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
     public void runUpdateTest(final AssertHandler handler) throws JSONException, InterruptedException {
         setup_insertData();
 
-        /**
+        /*
          * Initially we have three stops in the db:
          * - HSL:1040602 - Kamppi
          * - HSL:6150218 - Kamppi 2
@@ -120,8 +123,10 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
                 "\"lon\": 24.931515,\n" +
                 "\"lat\": 60.168901,\n" +
                 "\"name\": \"New Stop\",\n" +
-                "\"gtfsId\": \"HSL:1234567\"\n" +
-                "}";
+                "\"gtfsId\": \"HSL:1234567\",\n" +
+                "\"locationType\": \"STOP\",\n" +
+                "\"parentStation\": \"null\"\n" +
+            "}";
 
         final Stop newStop = Stop.fromJson(new JSONObject(newStopData));
 
@@ -133,7 +138,9 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
                 "\"lon\": 24.931515,\n" +
                 "\"lat\": 60.168901,\n" +
                 "\"name\": \"Updated Leppävaara\",\n" +
-                "\"gtfsId\": \"HSL:2111552\"\n" +
+                "\"gtfsId\": \"HSL:2111552\",\n" +
+                "\"locationType\": \"STOP\",\n" +
+                "\"parentStation\": \"null\"\n" +
                 "}";
 
         final Stop updatedStop = Stop.fromJson(new JSONObject(updatedStopData));
@@ -146,7 +153,9 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
                 "\"lon\": 24.375928,\n" +
                 "\"lat\": 60.201517,\n" +
                 "\"name\": \"Kamppi 2\",\n" +
-                "\"gtfsId\": \"HSL:6150218\"\n" +
+                "\"gtfsId\": \"HSL:6150218\",\n" +
+                "\"locationType\": \"STOP\",\n" +
+                "\"parentStation\": \"null\"\n" +
                 "}";
 
         final Stop oldStop = Stop.fromJson(new JSONObject(oldStopData));
@@ -163,12 +172,15 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         new UpdateDatabaseTask(InstrumentationRegistry.getTargetContext(), mDbHelper) {
             @Override
-            public Vector<Stop> _fetchStops() {
+            public Map<String, Vector<Stop>> _fetchStops() {
                 Vector<Stop> stops = new Vector<>(3);
                 stops.addElement(newStop);
                 stops.addElement(oldStop);
                 stops.addElement(updatedStop);
-                return stops;
+                HashMap<String, Vector<Stop>> data = new HashMap<>(2);
+                data.put("stops", stops);
+                data.put("stations", new Vector<Stop>());
+                return data;
             }
 
             @Override
@@ -191,8 +203,9 @@ public class UpdateDatabaseTaskTest extends DatabaseTestCase {
     }
 
     @Test
-    public void test_parseResponse() throws JSONException {
-        Vector<Stop> stops = UpdateDatabaseTask.parseResponse(new JSONObject(SAMPLE_RESPONSE));
+    public void test_parseStopList() throws JSONException {
+        JSONObject data = new JSONObject(SAMPLE_RESPONSE);
+        Vector<Stop> stops = UpdateDatabaseTask.parseStopList(data.getJSONObject("data").getJSONArray("stops"));
         assertThat("Three stops parsed", stops.size(), is(3));
     }
 

@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -56,10 +58,15 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
     @Override
     public Void runTask(SQLiteDatabase db, Void... _) {
         // Fetch stops
-        Vector<Stop> stops = this._fetchStops();
+        Map<String, Vector<Stop>> data = this._fetchStops();
+        Vector<Stop> stops = data.get("stops");
+        Vector<Stop> stations = data.get("stations");
 
-        // Update the DB
-        this.updateDatabase(db, stops);
+        // First, add stations to the database
+        this.updateDatabase(db, stations, StopListContract.Stop.STATIONS_TABLE_NAME);
+
+        // Then, add the stops
+        this.updateDatabase(db, stops, StopListContract.Stop.STOPS_TABLE_NAME);
 
         return null;
     }
@@ -69,12 +76,23 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
      *
      * @return an array with stop object
      */
-    public Vector<Stop> _fetchStops() {
+    public Map<String, Vector<Stop>> _fetchStops() {
         Logger.i(TAG, "Fetching stops");
         try {
             RequestFuture<JSONObject> req = DigitransitApi.getAllStops(mContext);
-            JSONObject res = req.get(DigitransitApi.WAIT_TIMEOUT, TimeUnit.SECONDS);
-            return parseResponse(res);
+            JSONObject response = req.get(DigitransitApi.WAIT_TIMEOUT, TimeUnit.SECONDS);
+            JSONObject data = response.getJSONObject("data");
+
+            // Parse stops and stations from the response
+            Vector<Stop> stops = parseStopList(data.getJSONArray("stops"));
+            Vector<Stop> stations = parseStopList(data.getJSONArray("stations"));
+            Logger.i(TAG, "Found %d stops, %d stations", stops.size(), stations.size());
+
+            Map<String, Vector<Stop>> result = new HashMap<>(2);
+            result.put("stops", stops);
+            result.put("stations", stations);
+            return result;
+
         } catch (InterruptedException e) {
             Logger.e(TAG, "Unexpected InterruptedException", e);
             throw new UpdateFailedException(e);
@@ -102,16 +120,13 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
     /**
      * Parses the response received from Digitransit API
      *
-     * @param response the response JSON
+     * @param stops a JSON Array of Stop objects
      * @return a Vector of parsed Stop objects
      * @throws JSONException if JSON cannot be parsed
      */
-    public static Vector<Stop> parseResponse(JSONObject response) throws JSONException {
-        JSONArray stops = response.getJSONObject("data").getJSONArray("stops");
-
+    public static Vector<Stop> parseStopList(JSONArray stops) throws JSONException {
         int numstops = stops.length();
         Vector<Stop> result = new Vector<>(numstops);
-
         for (int i = 0; i < stops.length(); i++) {
             result.addElement(Stop.fromJson(stops.getJSONObject(i)));
         }
@@ -127,8 +142,9 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
      *
      * @param db the database to update
      * @param stops the list of stops
+     * @param table the SQL table these should be added to (stations vs stops)
      */
-    private void updateDatabase(SQLiteDatabase db, Vector<Stop> stops) {
+    private void updateDatabase(SQLiteDatabase db, Vector<Stop> stops, String table) {
         db.beginTransaction();
 
         int deleted = 0;
@@ -151,10 +167,12 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
                 data.put(StopListContract.Stop.COLUMN_NAME_LON, loc.getLongitude());
                 data.put(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE, Stop.typeToCode(stop.getVehicleType()));
                 data.put(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE, stop.getPlatform());
+                data.put(StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE, stop.getLocationType());
+                data.put(StopListContract.Stop.COLUMN_NAME_PARENT_STATION, stop.getParentStation());
 
                 // Try updating an existing entry first
                 int changed = db.update(
-                    STOPS_TABLE_NAME,
+                    table,
                     data,
                     COLUMN_NAME_GTFS_ID + " = ?",
                     new String[]{stop.getId()}
@@ -164,7 +182,7 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
 
                 if (changed == 0) {
                     // The stop was not in the db; insert it.
-                    if (db.insert(STOPS_TABLE_NAME, null, data) == -1) {
+                    if (db.insert(table, null, data) == -1) {
                         Logger.w(TAG, "Failed to insert stop %s", stop.getId());
                         errors += 1;
                     } else {
@@ -183,7 +201,7 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
             }
 
             // Delete removed stops
-            deleted = db.delete(STOPS_TABLE_NAME, DELETE_REMOVED_COND, null);
+            deleted = db.delete(table, DELETE_REMOVED_COND, null);
 
             db.execSQL("DROP TABLE " + TEMP_TABLE_NAME);
 

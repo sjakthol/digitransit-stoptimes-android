@@ -45,7 +45,10 @@ public class DigitransitApi {
     private static final String QUERY_STOPS =
         "query {" +
         "  stops {" +
-        "    gtfsId, name, lat, lon, code, vehicleType, platformCode" +
+        "    gtfsId, name, lat, lon, code, vehicleType, locationType, platformCode, parentStation { gtfsId }" +
+        "  }" +
+        "  stations {" +
+        "    gtfsId, name, lat, lon, code, vehicleType, locationType, platformCode, parentStation { gtfsId }" +
         "  }" +
         "}";
 

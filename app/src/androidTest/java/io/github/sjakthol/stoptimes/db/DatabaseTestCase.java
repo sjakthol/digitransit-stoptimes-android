@@ -47,6 +47,7 @@ public class DatabaseTestCase {
         data.put(StopListContract.Stop.COLUMN_NAME_LAT, 60.168901);
         data.put(StopListContract.Stop.COLUMN_NAME_LON, 24.931515);
         data.put(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE, 1);
+        data.put(StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE, "STOP");
         data.put(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE, (String) null);
         db.insert(STOPS_TABLE_NAME, null, data);
 
@@ -57,6 +58,7 @@ public class DatabaseTestCase {
         data.put(StopListContract.Stop.COLUMN_NAME_LAT, 60.201517);
         data.put(StopListContract.Stop.COLUMN_NAME_LON, 24.375928);
         data.put(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE, 3);
+        data.put(StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE, "STOP");
         data.put(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE, (String) null);
         db.insert(STOPS_TABLE_NAME, null, data);
 
@@ -66,6 +68,7 @@ public class DatabaseTestCase {
         data.put(StopListContract.Stop.COLUMN_NAME_LAT, 21.9477);
         data.put(StopListContract.Stop.COLUMN_NAME_LON, 81.3224);
         data.put(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE, 109);
+        data.put(StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE, "STOP");
         data.put(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE, "2");
         db.insert(STOPS_TABLE_NAME, null, data);
     }

@@ -21,6 +21,8 @@ abstract class QueryStopsDatabaseTask<T> extends DatabaseTask<T, Cursor> {
         StopListContract.Stop.COLUMN_NAME_LAT,
         StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE,
         StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE,
+        StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE,
+        StopListContract.Stop.COLUMN_NAME_PARENT_STATION,
         StopListContract.Stop.COLUMN_NAME_IS_FAVORITE,
     };
     /**

@@ -23,6 +23,8 @@ public class Stop {
     private final boolean mIsFavorite;
     private final VehicleType mVehicleType;
     private final String mPlatform;
+    private final String mLocationType;
+    private final String mParentStation;
 
     /**
      * Create new stop
@@ -32,10 +34,15 @@ public class Stop {
      * @param code the code of the stop
      * @param lat the latitude of the stop position
      * @param lon the longitude of the stop position
+     * @param platform the platform code
+     * @param vehicleType the type of the vehicle that mainly uses this stop
+     * @param locationType the type of this stop
+     * @param parentStation the gtfsId of the parent station (if any)
      * @param is_favorite if this stop is favorite or not
      */
     Stop(String id, String name, String code, double lat,
-         double lon, String platform, int vehicleType, boolean is_favorite)
+         double lon, String platform, int vehicleType,
+         String locationType, String parentStation, boolean is_favorite)
     {
         mId = id;
         mName = name;
@@ -44,6 +51,8 @@ public class Stop {
         mLon = lon;
         mPlatform = platform;
         mVehicleType = codeToType(vehicleType);
+        mLocationType = locationType;
+        mParentStation = parentStation;
         mIsFavorite = is_favorite;
     }
 
@@ -54,6 +63,7 @@ public class Stop {
      *
      * @return a new Stop object
      */
+    @NonNull
     public static Stop fromCursor(@NonNull Cursor cursor) {
         return new Stop(
             cursor.getString(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_GTFS_ID)),
@@ -63,6 +73,8 @@ public class Stop {
             cursor.getDouble(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_LON)),
             cursor.getString(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_PLATFORM_CODE)),
             cursor.getInt(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_VEHICLE_TYPE)),
+            cursor.getString(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE)),
+            cursor.getString(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_PARENT_STATION)),
             cursor.getLong(cursor.getColumnIndex(StopListContract.Stop.COLUMN_NAME_IS_FAVORITE)) == 1
         );
     }
@@ -77,19 +89,23 @@ public class Stop {
      *               lat: Double,
      *               lon: Double,
      *               platformCode: String,
+     *               locationType: String,
      *               vehicleType: Int }
      *
      * @return a Stop object
      */
     public static Stop fromJson(@NonNull JSONObject stop) throws JSONException {
+        JSONObject parentStation = stop.optJSONObject("parentStation");
         return new Stop(
             stop.getString("gtfsId"),
             stop.getString("name"),
             stop.optString("code", ""),
             stop.getDouble("lat"),
             stop.getDouble("lon"),
-            stop.getString("platformCode"),
+            stop.optString("platformCode", null),
             stop.getInt("vehicleType"),
+            stop.getString("locationType"),
+            parentStation != null ? parentStation.getString("gtfsId") : null,
             false
         );
     }
@@ -289,5 +305,24 @@ public class Stop {
     @SuppressWarnings("WeakerAccess")
     public String getPlatform() {
         return mPlatform;
+    }
+
+    /**
+     * Get the type of this stop. Either 'STOP' or 'STATION'.
+     *
+     * @return the location type
+     */
+    public String getLocationType() {
+        return mLocationType;
+    }
+
+    /**
+     * The GTFS ID of the parent station.
+     *
+     * @return the id or null if no parent station exist for
+     * this stop.
+     */
+    public String getParentStation() {
+        return mParentStation;
     }
 }
