@@ -8,6 +8,7 @@ public class MockData {
         "    \"stop\": {" +
         "      \"stoptimesWithoutPatterns\": [{" +
         "        \"realtime\": false," +
+        "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\":34560," +
@@ -20,6 +21,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": false," +
+        "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\":34560," +
@@ -32,6 +34,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": false," +
+        "        \"stop\": { \"platformCode\": \"4\" }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\":34560," +
@@ -44,6 +47,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\":34500," +
@@ -56,6 +60,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\": 34560," +
@@ -68,6 +73,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"stop\": { \"platformCode\": \"4\" }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
         "        \"realtimeDeparture\":34660," +

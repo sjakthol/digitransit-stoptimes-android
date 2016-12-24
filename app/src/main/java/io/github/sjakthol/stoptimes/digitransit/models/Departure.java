@@ -16,12 +16,14 @@ public final class Departure {
     private final boolean mRealtime;
     private final Timestamp mRealtimeDeparture;
     private final Timestamp mScheduledDeparture;
+    private final String mPlatform;
 
-    private Departure(String route, VehicleType routeType, String sign, Timestamp sDep, Timestamp rtDep, boolean isRt) {
+    private Departure(String route, VehicleType routeType, String sign, String platform, Timestamp sDep, Timestamp rtDep, boolean isRt) {
         mRoute = fixRoute(route, routeType);
 
         mRouteType = routeType;
         mHeadsign = sign;
+        mPlatform = platform;
         mScheduledDeparture = sDep;
         mRealtimeDeparture = rtDep;
         mRealtime = isRt;
@@ -55,10 +57,14 @@ public final class Departure {
         long scheduled = obj.getLong("scheduledDeparture");
         long realtime = obj.getLong("realtimeDeparture");
 
+        JSONObject stopInfo = obj.getJSONObject("stop");
+        String platform = stopInfo.getString("platformCode");
+
         return new Departure(
             route.getString("shortName"),
             routeToVehicleType(route.getString("type")),
             trip.getString("tripHeadsign"),
+            platform,
             new Timestamp((day + scheduled) * 1000),
             new Timestamp((day + realtime) * 1000),
             obj.getBoolean("realtime")
@@ -186,5 +192,14 @@ public final class Departure {
      */
     public boolean isRealtime() {
         return mRealtime;
+    }
+
+    /**
+     * Get the track or platform code (if any).
+     *
+     * @return the track / platform code or null
+     */
+    public String getPlatform() {
+        return mPlatform;
     }
 }

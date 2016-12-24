@@ -19,7 +19,17 @@ public class StopTest {
 
     @Test
     public void test_getters() throws Exception {
-        Stop stop = new Stop("HSL:1234", "Railway Station", "0001", 78, 88, "21", 3, true);
+        Stop stop = new Stop(
+                "HSL:1234",
+                "Railway Station",
+                "0001",
+                78,
+                88,
+                "21",
+                3,
+                "STATION",
+                null,
+                true);
         assertThat(stop.getId(), is("HSL:1234"));
         assertThat(stop.getName(), is("Railway Station"));
         assertThat(stop.getCode(), is("0001"));

@@ -28,6 +28,7 @@ public class DigitransitApi {
         "  stop(id: $stop) {\n" +
         "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
+        "      stop { platformCode },\n" +
         "      serviceDay,\n" +
         "      scheduledDeparture,\n" +
         "      realtimeDeparture,\n" +
@@ -47,6 +48,7 @@ public class DigitransitApi {
         "  station(id: $stop) {\n" +
         "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
+        "      stop { platformCode },\n" +
         "      serviceDay,\n" +
         "      scheduledDeparture,\n" +
         "      realtimeDeparture,\n" +
