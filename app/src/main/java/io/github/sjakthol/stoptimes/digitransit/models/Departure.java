@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.digitransit.models;
 
+import android.content.res.Resources;
 import android.text.TextUtils;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.utils.Logger;
@@ -23,7 +24,7 @@ public final class Departure {
 
         mRouteType = routeType;
         mHeadsign = sign;
-        mPlatform = platform;
+        mPlatform = TextUtils.isEmpty(platform) || platform.equals("null") ? null : platform;
         mScheduledDeparture = sDep;
         mRealtimeDeparture = rtDep;
         mRealtime = isRt;
@@ -201,5 +202,15 @@ public final class Departure {
      */
     public String getPlatform() {
         return mPlatform;
+    }
+
+    public String formatPlatformCode(Resources res) {
+        if (mRouteType == VehicleType.COMMUTER_TRAIN) {
+            // For trains, call the platform "Track"
+            return res.getString(R.string.platform_code_train, getPlatform());
+        }
+
+        // For others call it 'Platform'
+        return res.getString(R.string.platform_code_default, getPlatform());
     }
 }

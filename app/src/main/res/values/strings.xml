@@ -86,4 +86,6 @@
     <string name="station_train">Train Station</string>
     <string name="station_subway">Subway Station</string>
     <string name="station_generic">Terminal</string>
+    <string name="platform_code_train">Track %s</string>
+    <string name="platform_code_default">Platform %s</string>
 </resources>

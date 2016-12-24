@@ -30,11 +30,13 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     /**
      * The default text colors.
      */
-    private ColorStateList mDefaultColors;
+    private ColorStateList mDefaultPrimaryTextColors;
+    private ColorStateList mDefaultSecondaryTextColors;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mRoute;
         private final TextView mHeadsign;
+        private final TextView mPlatform;
         private final TextView mTime;
 
         ViewHolder(View itemView) {
@@ -43,6 +45,7 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
             mRoute = (ImageView) itemView.findViewById(R.id.departure_route);
             mHeadsign = (TextView) itemView.findViewById(R.id.departure_headsign);
             mTime = (TextView) itemView.findViewById(R.id.departure_time);
+            mPlatform = (TextView) itemView.findViewById(R.id.departure_platform);
         }
 
         ImageView getRoute() {
@@ -53,6 +56,9 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         }
         TextView getTime() {
             return mTime;
+        }
+        TextView getPlatform() {
+            return mPlatform;
         }
     }
 
@@ -87,6 +93,14 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         holder.getRoute().setImageDrawable(drawable);
         holder.getHeadsign().setText(departure.getHeadsign());
 
+        String platform = departure.getPlatform();
+        if (platform == null) {
+            holder.getPlatform().setVisibility(View.GONE);
+        } else {
+            holder.getPlatform().setVisibility(View.VISIBLE);
+            holder.getPlatform().setText(departure.formatPlatformCode(holder.getPlatform().getResources()));
+        }
+
         // Render the departure time.
         Timestamp time = departure.isRealtime() ?
             departure.getRealtimeDeparture() :
@@ -100,8 +114,12 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
         holder.getTime().setText(leaves);
 
-        if (mDefaultColors == null) {
-            mDefaultColors = holder.getTime().getTextColors();
+        if (mDefaultPrimaryTextColors == null) {
+            mDefaultPrimaryTextColors = holder.getTime().getTextColors();
+        }
+
+        if (mDefaultSecondaryTextColors == null) {
+            mDefaultSecondaryTextColors = holder.getPlatform().getTextColors();
         }
 
         // Highlight realtime departure times with a different color
@@ -110,9 +128,11 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
             holder.getTime().setTextColor(realtimeColor);
             holder.getHeadsign().setTextColor(realtimeColor);
+            holder.getPlatform().setTextColor(realtimeColor);
         } else {
-            holder.getTime().setTextColor(mDefaultColors);
-            holder.getHeadsign().setTextColor(mDefaultColors);
+            holder.getTime().setTextColor(mDefaultPrimaryTextColors);
+            holder.getHeadsign().setTextColor(mDefaultPrimaryTextColors);
+            holder.getPlatform().setTextColor(mDefaultSecondaryTextColors);
         }
     }
 

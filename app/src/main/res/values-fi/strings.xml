@@ -79,4 +79,6 @@
     <string name="station_generic">Terminaali</string>
     <string name="station_subway">Metroasema</string>
     <string name="station_train">Juna-asema</string>
+    <string name="platform_code_default">Laituri %s</string>
+    <string name="platform_code_train">Raide %s</string>
 </resources>
