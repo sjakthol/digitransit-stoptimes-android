@@ -48,7 +48,7 @@ public class DigitransitApiTest {
     public void test_parseDepartureList() throws Exception {
         JSONObject resp = new JSONObject(MockData.MOCK_DEPARTURES);
 
-        Vector<Departure> departures = DigitransitApi.parseDepartureList(resp);
+        Vector<Departure> departures = DigitransitApi.parseDepartureList(resp, true);
         assertThat("correct number of departures", departures.size(), is(NUM_MOCK_DEPARTURES));
     }
 
@@ -66,7 +66,7 @@ public class DigitransitApiTest {
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
             "HSL:1234", "STOP",
-                10,
+                10, true,
                 new DigitransitApi.DepartureResponseListener() {
                     @Override
                     public void onDeparturesAvailable(Vector<Departure> departures) {
@@ -112,7 +112,7 @@ public class DigitransitApiTest {
         final CountDownLatch latch = new CountDownLatch(1);
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
-            "HSL:1234", "STOP", 10,
+            "HSL:1234", "STOP", 10, true,
                 new DigitransitApi.DepartureResponseListener() {
                     @Override
                     public void onDeparturesAvailable(Vector<Departure> departures) {
@@ -144,7 +144,7 @@ public class DigitransitApiTest {
         final CountDownLatch latch = new CountDownLatch(1);
         DigitransitApi.getDepartures(
             InstrumentationRegistry.getTargetContext(),
-            "HSL:1234", "STOP", 10,
+            "HSL:1234", "STOP", 10, true,
                 new DigitransitApi.DepartureResponseListener() {
                     @Override
                     public void onDeparturesAvailable(Vector<Departure> departures) {

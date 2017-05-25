@@ -8,6 +8,7 @@ public class MockData {
         "    \"stop\": {" +
         "      \"stoptimesWithoutPatterns\": [{" +
         "        \"realtime\": false," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
@@ -21,6 +22,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": false," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
@@ -34,6 +36,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": false," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": \"4\" }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
@@ -47,6 +50,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
@@ -60,6 +64,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": null }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +
@@ -73,6 +78,7 @@ public class MockData {
         "        }" +
         "      }, {" +
         "        \"realtime\": true," +
+        "        \"pickupType\": \"SCHEDULED\"," +
         "        \"stop\": { \"platformCode\": \"4\" }," +
         "        \"serviceDay\": 1469826000," +
         "        \"scheduledDeparture\": 34560," +

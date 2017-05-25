@@ -81,4 +81,9 @@
     <string name="station_train">Juna-asema</string>
     <string name="platform_code_default">Laituri %s</string>
     <string name="platform_code_train">Raide %s</string>
+    <string name="pref_key_show_arrivals_to_terminus">show_arrivals_to_terminus</string>
+    <string name="pref_show_arrivals_to_terminus_title">Näytä pääteasemalle saapuvat kulkuneuvot</string>
+    <string name="pref_show_arrivals_to_terminus_summary">Näytä päätepysäkilleen matkustajia jättävät linjat
+        pysäkkikohtaisessa lähtölistauksessa.
+    </string>
 </resources>

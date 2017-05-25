@@ -88,4 +88,9 @@
     <string name="station_generic">Terminal</string>
     <string name="platform_code_train">Track %s</string>
     <string name="platform_code_default">Platform %s</string>
+    <string name="pref_key_show_arrivals_to_terminus">show_arrivals_to_terminus</string>
+    <string name="pref_show_arrivals_to_terminus_title">Show Arrivals to Terminus</string>
+    <string name="pref_show_arrivals_to_terminus_summary">Include arrivals of vehicles in the departure list that only
+        drop passengers off at their terminus.
+    </string>
 </resources>

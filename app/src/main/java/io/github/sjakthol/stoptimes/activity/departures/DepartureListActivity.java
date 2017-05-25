@@ -209,7 +209,7 @@ public class DepartureListActivity extends BaseActivity implements
 
         Logger.i(TAG, "Fetching departures from Digitransit");
         try {
-            DigitransitApi.getDepartures(this, mStopId, mLocationType, getNumDepartures(), this);
+            DigitransitApi.getDepartures(this, mStopId, mLocationType, getNumDepartures(), getShowArrivalsToTerminus(), this);
         } catch (JSONException e) {
             // This can happen if getNumDepartures() is infinity or NaN. If
             // it does, YOLO!
@@ -249,5 +249,12 @@ public class DepartureListActivity extends BaseActivity implements
             Logger.w(TAG, "getNumDepartures(): Invalid limit %s", limit);
             return 10;
         }
+    }
+
+    private boolean getShowArrivalsToTerminus() {
+        String key = getString(R.string.pref_key_show_arrivals_to_terminus);
+        return PreferenceManager
+            .getDefaultSharedPreferences(this)
+            .getBoolean(key, false);
     }
 }

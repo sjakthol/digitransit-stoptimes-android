@@ -28,6 +28,7 @@ public class DigitransitApi {
         "  stop(id: $stop) {\n" +
         "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
+        "      pickupType,\n" +
         "      stop { platformCode },\n" +
         "      serviceDay,\n" +
         "      scheduledDeparture,\n" +
@@ -48,6 +49,7 @@ public class DigitransitApi {
         "  station(id: $stop) {\n" +
         "    stoptimesWithoutPatterns(numberOfDepartures: $departures) {\n" +
         "      realtime,\n" +
+        "      pickupType,\n" +
         "      stop { platformCode },\n" +
         "      serviceDay,\n" +
         "      scheduledDeparture,\n" +
@@ -99,19 +101,21 @@ public class DigitransitApi {
 
     /**
      * Fetch the next departures from the Digitransit API for the given stop.
-     *  @param ctx application context
+     * @param ctx application context
      * @param stopId GTFS ID of the stop
      * @param locationType the type of the stop
      * @param numDepartures the number of departures to fetch
+     * @param includeTerminus whether to include arrivals to terminus in the results
      * @param listener a DepartureResponseListener for the request
      */
     public static void getDepartures(
         final Context ctx,
         final String stopId,
-        String locationType,
+        final String locationType,
         final int numDepartures,
-        final DepartureResponseListener listener)
-    throws JSONException {
+        final boolean includeTerminus,
+        final DepartureResponseListener listener) throws JSONException
+    {
         HashMap<String, String> vars = new HashMap<>();
         vars.put("stop", stopId);
         vars.put("departures", String.valueOf(numDepartures));
@@ -129,7 +133,7 @@ public class DigitransitApi {
             public void onResponse(JSONObject response) {
             Logger.d(TAG, "Got successful response");
             try {
-                Vector<Departure> res = parseDepartureList(response);
+                Vector<Departure> res = parseDepartureList(response, includeTerminus);
                 listener.onDeparturesAvailable(res);
             } catch (JSONException e) {
                 listener.onDepartureLoadError(new VolleyError(e));
@@ -156,10 +160,11 @@ public class DigitransitApi {
      * Parses a Departure list response into a Vector of Departure objects.
      *
      * @param response the response to parse
+     * @param includeTerminus whether to include arrivals to terminus in the results
      * @return a list of Departures
      * @throws JSONException if the response JSON has unexpected format or is missing fields
      */
-    static Vector<Departure> parseDepartureList(JSONObject response) throws JSONException {
+    static Vector<Departure> parseDepartureList(JSONObject response, boolean includeTerminus) throws JSONException {
         JSONObject data = response.getJSONObject("data");
         JSONObject stop = data.optJSONObject("stop");
         JSONObject station = data.optJSONObject("station");
@@ -170,10 +175,14 @@ public class DigitransitApi {
         JSONObject stopOrStation = stop == null ? station : stop;
         JSONArray raw = stopOrStation.getJSONArray("stoptimesWithoutPatterns");
 
-        // Add a sane default capacity.
-        Vector<Departure> res = new Vector<>(20);
+        Vector<Departure> res = new Vector<>(raw.length());
         for (int i = 0; i < raw.length(); i++) {
-            res.add(Departure.fromJsonObject(raw.getJSONObject(i)));
+            JSONObject obj = raw.getJSONObject(i);
+            boolean isTerminus = obj.getString("pickupType").equals("NONE");
+
+            if (includeTerminus || !isTerminus) {
+                res.add(Departure.fromJsonObject(obj));
+            }
         }
 
         return res;

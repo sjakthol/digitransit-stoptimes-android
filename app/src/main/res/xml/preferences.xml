@@ -28,5 +28,10 @@
                 android:title="@string/pref_num_departures_title"
                 android:summary="@string/pref_num_departures_summary"
                 android:numeric="integer" />
+        <CheckBoxPreference
+                android:key="@string/pref_key_show_arrivals_to_terminus"
+                android:title="@string/pref_show_arrivals_to_terminus_title"
+                android:summary="@string/pref_show_arrivals_to_terminus_summary"
+                android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>
