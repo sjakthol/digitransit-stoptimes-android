@@ -10,9 +10,12 @@ import static org.junit.Assert.*;
 public class DepartureTest {
     @Test
     public void test_routeToVehicleType() throws Exception {
-        assertThat(Departure.routeToVehicleType("BUS"), is(VehicleType.BUS));
-        assertThat(Departure.routeToVehicleType("TRAM"), is(VehicleType.TRAM));
-        assertThat(Departure.routeToVehicleType("RAIL"), is(VehicleType.COMMUTER_TRAIN));
-        assertThat(Departure.routeToVehicleType("SUBWAY"), is(VehicleType.SUBWAY));
+        assertThat(Departure.routeToVehicleType("0"), is(VehicleType.TRAM));
+        assertThat(Departure.routeToVehicleType("1"), is(VehicleType.SUBWAY));
+        assertThat(Departure.routeToVehicleType("109"), is(VehicleType.COMMUTER_TRAIN));
+        assertThat(Departure.routeToVehicleType("701"), is(VehicleType.BUS));
+        assertThat(Departure.routeToVehicleType("702"), is(VehicleType.BUS));
+        assertThat(Departure.routeToVehicleType("RANDOM"), is(VehicleType.BUS));
+        assertThat(Departure.routeToVehicleType("1234"), is(VehicleType.BUS));
     }
 }

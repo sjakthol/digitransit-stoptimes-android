@@ -102,18 +102,32 @@ public final class Departure {
      * @return a route type constant
      */
     static VehicleType routeToVehicleType(String type) {
-        switch (type) {
-            case "BUS":
-                return VehicleType.BUS;
-            case "TRAM":
-                return VehicleType.TRAM;
-            case "RAIL":
-                return VehicleType.COMMUTER_TRAIN;
-            case "SUBWAY":
-                return VehicleType.SUBWAY;
-            default:
-                Logger.w(TAG, String.format("Unknown route type '%s'", type));
-                return VehicleType.BUS;
+        // These types are almost extended GTFS route types with some exceptions.
+        // Ref: https://developers.google.com/transit/gtfs/reference/extended-route-types
+        int i;
+        try {
+            i = Integer.parseInt(type);
+        } catch (NumberFormatException e) {
+            Logger.w(TAG, "Failed to parse raw vehicle type as an integer: '%s'", type);
+            return VehicleType.BUS;
+        }
+
+        if (i == 0) {
+            // 0 means tram
+            return VehicleType.TRAM;
+        } else if (i == 1) {
+            // 1 means subway
+            return VehicleType.SUBWAY;
+        } else if (i >= 100 && i < 200){
+            // 100 -> 199 means some kind of a train
+            return VehicleType.COMMUTER_TRAIN;
+        } else if (i >= 700 && i < 800) {
+            // 700 -> 800 means bus service
+            return VehicleType.BUS;
+        } else {
+            // Values not seen in the wild (default to bus)
+            Logger.w(TAG, "Unknown route type %s", i);
+            return VehicleType.BUS;
         }
     }
 
