@@ -21,6 +21,7 @@
     <string name="pref_key_departures_num_results">num_departures</string>
     <string name="pref_key_stoplist_num_results">stoplist_num_results</string>
     <string name="pref_key_use_location">use_location</string>
+    <string name="pref_key_show_citybikes">show_citybikes</string>
     <string name="pref_num_departures_summary">Lähtölistassa näytettävien lähtöjen lukumäärä.</string>
     <string name="pref_num_departures_title">Lähtöjen lukumäärä</string>
     <string name="pref_stoplist_num_results_summary">Pysäkkihaussa näytettävien pysäkkien lukumäärä.</string>

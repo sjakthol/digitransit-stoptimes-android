@@ -37,7 +37,7 @@ public class CitybikeStatus {
      * @return number of spaces
      */
     public int getSpaces() {
-        return Math.max(mSpaces, mBikesAvailable);
+        return mSpaces + mBikesAvailable;
     }
 
     /**
