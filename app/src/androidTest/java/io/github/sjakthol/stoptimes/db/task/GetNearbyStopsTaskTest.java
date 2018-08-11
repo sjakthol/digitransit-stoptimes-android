@@ -50,7 +50,7 @@ public class GetNearbyStopsTaskTest extends DatabaseTestCase {
 
                 latch.countDown();
             }
-        }.execute(loc, "2");
+        }.execute(loc, "2", false);
 
         latch.await();
     }

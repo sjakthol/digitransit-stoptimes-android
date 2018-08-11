@@ -9,6 +9,7 @@ import com.android.volley.toolbox.RequestFuture;
 import io.github.sjakthol.stoptimes.db.StopListContract;
 import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
+import io.github.sjakthol.stoptimes.digitransit.models.CityBikeStation;
 import io.github.sjakthol.stoptimes.digitransit.models.Stop;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import io.github.sjakthol.stoptimes.utils.NetworkRequiredException;
@@ -86,6 +87,12 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
             // Parse stops and stations from the response
             Vector<Stop> stops = parseStopList(data.getJSONArray("stops"));
             Vector<Stop> stations = parseStopList(data.getJSONArray("stations"));
+            Vector<Stop> cityBikeStations = parseCitybikeStationList(data.getJSONArray("bikeRentalStations"));
+
+            Logger.i(TAG, "Found %d citybike stations", cityBikeStations.size());
+
+            // Append the city bike stations to the list of stops
+            stops.addAll(cityBikeStations);
             Logger.i(TAG, "Found %d stops, %d stations", stops.size(), stations.size());
 
             Map<String, Vector<Stop>> result = new HashMap<>(2);
@@ -129,6 +136,23 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
         Vector<Stop> result = new Vector<>(numstops);
         for (int i = 0; i < stops.length(); i++) {
             result.addElement(Stop.fromJson(stops.getJSONObject(i)));
+        }
+
+        return result;
+    }
+
+    /**
+     * Parses the citybike response received from Digitransit API
+     *
+     * @param stops a JSON Array of CitybikeStation objects
+     * @return a Vector of parsed Stop objects
+     * @throws JSONException if JSON cannot be parsed
+     */
+    public static Vector<Stop> parseCitybikeStationList(JSONArray stops) throws JSONException {
+        int numstops = stops.length();
+        Vector<Stop> result = new Vector<>(numstops);
+        for (int i = 0; i < stops.length(); i++) {
+            result.addElement(CityBikeStation.fromJson(stops.getJSONObject(i)));
         }
 
         return result;

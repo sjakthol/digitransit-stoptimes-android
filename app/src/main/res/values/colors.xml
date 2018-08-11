@@ -8,4 +8,7 @@
     <color name="hsl_bus">#007AC9</color>
     <color name="hsl_subway">#FF6319</color>
     <color name="departure_realtime">#4caf50</color>
+    <color name="citybike_station_good">#4caf50</color>
+    <color name="citybike_station_few">#fc7c08</color>
+    <color name="citybike_station_none">#b51b00</color>
 </resources>

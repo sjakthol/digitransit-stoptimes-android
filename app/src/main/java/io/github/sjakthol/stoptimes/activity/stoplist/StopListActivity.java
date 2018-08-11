@@ -136,7 +136,7 @@ public class StopListActivity
                         super.onPostExecute(res);
                         handleDatabaseQueryTaskResult(res);
                     }
-                }.execute();
+                }.execute(getShowCitybikeStations());
                 break;
             case NEARBY:
                 if (getLocation() == null) {
@@ -163,7 +163,7 @@ public class StopListActivity
                 super.onPostExecute(res);
                 handleDatabaseQueryTaskResult(res);
             }
-        }.execute(location, getNumStops());
+        }.execute(location, getNumStops(), getShowCitybikeStations());
     }
 
     private void showAcquiringLocationMessage() {
@@ -285,6 +285,18 @@ public class StopListActivity
             }).create();
 
         alert.show();
+    }
+
+    /**
+     * Check if citybike stations should be included.
+     *
+     * @return true / false
+     */
+    private boolean getShowCitybikeStations() {
+        String key = getString(R.string.pref_key_show_citybikes);
+        return PreferenceManager
+            .getDefaultSharedPreferences(this)
+            .getBoolean(key, true);
     }
 
 }

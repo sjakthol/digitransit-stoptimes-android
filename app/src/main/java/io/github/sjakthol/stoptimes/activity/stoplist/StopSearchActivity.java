@@ -2,6 +2,7 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -104,7 +105,7 @@ public class StopSearchActivity extends StopListActivityBase
                 super.onPostExecute(res);
                 handleDatabaseQueryTaskResult(res);
             }
-        }.execute(query, getNumStops());
+        }.execute(query, getNumStops(), getShowCitybikeStations());
     }
 
     @Override
@@ -131,5 +132,17 @@ public class StopSearchActivity extends StopListActivityBase
             R.string.stoplist_search_empty_title,
             R.string.stoplist_search_empty_description
         );
+    }
+
+    /**
+     * Check if citybike stations should be included.
+     *
+     * @return true / false
+     */
+    private boolean getShowCitybikeStations() {
+        String key = getString(R.string.pref_key_show_citybikes);
+        return PreferenceManager
+            .getDefaultSharedPreferences(this)
+            .getBoolean(key, true);
     }
 }

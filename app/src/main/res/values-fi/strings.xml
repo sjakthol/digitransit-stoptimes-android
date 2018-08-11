@@ -10,6 +10,7 @@
     <string name="loading_default">Ladataan…</string>
     <string name="loading_departures">Ladataan lähtöjä…</string>
     <string name="loading_stops">Ladataan pysäkkitietoja…</string>
+    <string name="loading_citybike_status">Ladataan tietoja…</string>
     <string name="nca_details">Pysäkkiaikataulujen katseleminen vaatii verkkoyhteyden. Ota verkkoyhteys käyttöön
         laitteen asetuksista.
     </string>
@@ -69,7 +70,7 @@
 
     <string name="bottom_favorites">Suosikit</string>
     <string name="bottom_nearby">Lähellä</string>
-    <string name="acquiring_location">Haetaan sijaintia...</string>
+    <string name="acquiring_location">Haetaan sijaintia…</string>
     <string name="location_disabled">Sijainti pois käytöstä</string>
     <string name="location_disabled_dialog_stop_using_it">Älä käytä sijaintia</string>
     <string name="location_disabled_dialog_title">Sijainti ei käytössä</string>
@@ -86,4 +87,10 @@
     <string name="pref_show_arrivals_to_terminus_summary">Näytä päätepysäkilleen matkustajia jättävät linjat
         pysäkkikohtaisessa lähtölistauksessa.
     </string>
+    <string name="citybike_station">Kaupunkipyöräasema</string>
+    <string name="citybike_station_availability">%1$d/%2$d</string>
+    <string name="citybike_status_active">Käytössä</string>
+    <string name="citybike_status_inactive">Ei käytössä</string>
+    <string name="pref_show_citybikes_title">Näytä kaupunkipyöräasemat</string>
+    <string name="pref_show_citybikes_summary">Näytä kaupunkipyöräasemat pysäkkilistassa.</string>
 </resources>

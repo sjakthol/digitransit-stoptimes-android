@@ -36,7 +36,7 @@ public class GetFavoriteStopsTaskTest extends DatabaseTestCase {
 
                 latch.countDown();
             }
-        }.execute();
+        }.execute(false);
 
         latch.await();
     }
@@ -74,7 +74,7 @@ public class GetFavoriteStopsTaskTest extends DatabaseTestCase {
                 cur.close();
                 latch.countDown();
             }
-        }.execute();
+        }.execute(false);
 
         latch.await();
     }

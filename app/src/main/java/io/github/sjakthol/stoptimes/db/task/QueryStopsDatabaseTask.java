@@ -9,6 +9,9 @@ import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
  * columns each such query should return.
  */
 abstract class QueryStopsDatabaseTask<T> extends DatabaseTask<T, Cursor> {
+
+    static final String BUNDLE_CITYBIKES = "BUNDLE_CITYBIKES";
+
     /**
      * The list of columns all stop queries should return
      */

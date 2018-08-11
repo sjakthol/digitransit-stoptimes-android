@@ -15,6 +15,7 @@ import io.github.sjakthol.stoptimes.activity.generic.MessageFragment;
 import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
+import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
@@ -121,10 +122,7 @@ public class DepartureListActivity extends BaseActivity implements
      **/
     @Override
     public void onDeparturesAvailable(Vector<Departure> departures) {
-        if (!mDepartureList.isAdded()) {
-            Logger.i(TAG, "Showing DepartureListFragment after initial update");
-            setFragment(mDepartureList, FRAG_DEPARTURE_LIST);
-        }
+        ensureDepartureListIsAdded();
 
         if (departures.isEmpty()) {
             Logger.i(TAG, "Got empty departure list; showing notice");
@@ -141,6 +139,13 @@ public class DepartureListActivity extends BaseActivity implements
         Logger.i(TAG, "Updating DepartureListFragment");
         mDepartureList.setDepartureList(departures);
         mDepartureList.updateFinished();
+    }
+
+    private void ensureDepartureListIsAdded() {
+        if (!mDepartureList.isAdded()) {
+            Logger.i(TAG, "Showing DepartureListFragment after initial update");
+            setFragment(mDepartureList, FRAG_DEPARTURE_LIST);
+        }
     }
 
     @Override
@@ -168,6 +173,15 @@ public class DepartureListActivity extends BaseActivity implements
         }
 
         // Notify the fragment that update has finished
+        mDepartureList.updateFinished();
+    }
+
+    @Override
+    public void onCitybikeStatusAvailable(CitybikeStatus status) {
+        Logger.d(TAG, "Got citybike status update: %s", status);
+
+        ensureDepartureListIsAdded();
+        mDepartureList.setCitybikeStatus(status);
         mDepartureList.updateFinished();
     }
 
@@ -207,6 +221,11 @@ public class DepartureListActivity extends BaseActivity implements
     private void updateDepartures() {
         showLoadingIndicator();
 
+        if (mLocationType.equals("CITYBIKE_STATION")) {
+            updateCitybikeStatus();
+            return;
+        }
+
         Logger.i(TAG, "Fetching departures from Digitransit");
         try {
             DigitransitApi.getDepartures(this, mStopId, mLocationType, getNumDepartures(), getShowArrivalsToTerminus(), this);
@@ -214,6 +233,15 @@ public class DepartureListActivity extends BaseActivity implements
             // This can happen if getNumDepartures() is infinity or NaN. If
             // it does, YOLO!
             Logger.wtf(TAG, "getNumDepartures() == %s", getNumDepartures());
+            Logger.wtf(TAG, "Bad JSON!", e);
+        }
+    }
+
+    private void updateCitybikeStatus() {
+        Logger.d(TAG, "Updating status of citybike station %s", mStopId);
+        try {
+            DigitransitApi.getCitybikeStationStatus(this, mStopId, this);
+        } catch (JSONException e) {
             Logger.wtf(TAG, "Bad JSON!", e);
         }
     }
@@ -227,7 +255,10 @@ public class DepartureListActivity extends BaseActivity implements
             mDepartureList.updateStarted();
         } else {
             Logger.d(TAG, "Showing loading screen since list is hidden");
-            String msg = getResources().getString(R.string.loading_departures);
+            String msg = getResources().getString(
+                mLocationType.equals("CITYBIKE_STATION") ?
+                    R.string.loading_citybike_status :
+                    R.string.loading_departures);
             setFragment(LoadingFragment.createWithMessage(msg));
         }
     }

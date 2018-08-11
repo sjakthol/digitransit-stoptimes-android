@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.github.sjakthol.stoptimes.R;
+import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
@@ -139,6 +140,16 @@ public class DepartureListFragment extends Fragment {
     void setDepartureList(Vector<Departure> departures) {
         Logger.i(TAG, "Changing departure list to %s", departures);
         mAdapter.setDepartureList(departures);
+    }
+
+    /**
+     * Update the departure list to show cityibike status.
+     *
+     * @param status the status to show
+     */
+    void setCitybikeStatus(CitybikeStatus status) {
+        Logger.i(TAG, "Changing departure list to status %s", status);
+        mAdapter.setCitybikeStatus(status);
     }
 
     /**

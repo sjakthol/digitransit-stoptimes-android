@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
+import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -93,6 +94,11 @@ public class DigitransitApiTest {
                         assertThat("unexpected error " + error.toString(), true, is(false));
                         latch.countDown();
                     }
+
+                    @Override
+                    public void onCitybikeStatusAvailable(CitybikeStatus status) {
+
+                    }
                 });
 
         latch.await();
@@ -125,6 +131,11 @@ public class DigitransitApiTest {
                         assertThat("got JSON error", error.getCause() instanceof JSONException, is(true));
                         latch.countDown();
                     }
+
+                    @Override
+                    public void onCitybikeStatusAvailable(CitybikeStatus status) {
+
+                    }
                 });
 
         latch.await();
@@ -156,6 +167,11 @@ public class DigitransitApiTest {
                     public void onDepartureLoadError(VolleyError error) {
                         assertThat("got error", error, is(notNullValue()));
                         latch.countDown();
+                    }
+
+                    @Override
+                    public void onCitybikeStatusAvailable(CitybikeStatus status) {
+
                     }
                 });
 

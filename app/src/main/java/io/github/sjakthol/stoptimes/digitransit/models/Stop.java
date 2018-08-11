@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 public class Stop {
     private static final String TAG = Stop.class.getSimpleName();
+    protected static final int CITYBIKE_CODE = 99001;
     private final String mId;
     private final String mName;
     private final String mCode;
@@ -128,6 +129,8 @@ public class Stop {
                 return VehicleType.BUS;
             case 109:
                 return VehicleType.COMMUTER_TRAIN;
+            case CITYBIKE_CODE:
+                return VehicleType.CITYBIKE;
             default:
                 Logger.w(TAG, "Unknown vehicle type code '%d'", code);
                 return VehicleType.BUS;
@@ -144,6 +147,8 @@ public class Stop {
                 return 3;
             case COMMUTER_TRAIN:
                 return 109;
+            case CITYBIKE:
+                return CITYBIKE_CODE;
             default:
                 Logger.w(TAG, "Unknown vehicle type '%s'", type);
                 return 3;
@@ -198,7 +203,9 @@ public class Stop {
      * @return an ID of a string resource that contains the city name
      */
     public @StringRes int getCity() {
-        if (getCode().matches("^\\d+$")) {
+        if (getVehicleType() == VehicleType.CITYBIKE) {
+            return R.string.citybike_station; // cannot determine from code
+        } else if (getCode().matches("^\\d+$")) {
             return R.string.stop_location_helsinki;
         } else if (getCode().startsWith("E")) {
             return R.string.stop_location_espoo;
@@ -206,8 +213,6 @@ public class Stop {
             return R.string.stop_location_vantaa;
         } else if (getCode().startsWith("Ke")) {
             return R.string.stop_location_kerava;
-        } else if (getCode().startsWith("Si")) {
-            return R.string.stop_location_vantaa;
         } else if (getCode().startsWith("Ki")) {
             return R.string.stop_location_knummi;
         } else if (getCode().startsWith("Mä")) {
@@ -275,8 +280,10 @@ public class Stop {
                 return R.drawable.ic_bus;
             case COMMUTER_TRAIN:
                 return R.drawable.ic_train;
+            case CITYBIKE:
+                return R.drawable.ic_bike;
             default:
-                Logger.w(TAG, "Unknown vehicle type '%d'", vehicleType);
+                Logger.w(TAG, "Unknown vehicle type '%s'", vehicleType);
                 return R.drawable.ic_bus;
         }
     }

@@ -7,5 +7,6 @@ enum VehicleType {
     BUS,
     TRAM,
     COMMUTER_TRAIN,
-    SUBWAY
+    SUBWAY,
+    CITYBIKE
 }

@@ -35,7 +35,7 @@ public class QueryStopsTaskTest extends DatabaseTestCase {
                 res.close();
                 latch.countDown();
             }
-        }.execute("kamppi", "20");
+        }.execute("kamppi", "20", false);
 
         latch.await();
     }
@@ -60,7 +60,7 @@ public class QueryStopsTaskTest extends DatabaseTestCase {
                 res.close();
                 latch.countDown();
             }
-        }.execute("a", "2");
+        }.execute("a", "2", false);
 
         latch.await();
     }

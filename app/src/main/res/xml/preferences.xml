@@ -18,6 +18,11 @@
             android:title="@string/pref_stoplist_num_results_title"
             android:summary="@string/pref_stoplist_num_results_summary"
             android:numeric="integer" />
+        <CheckBoxPreference
+            android:key="@string/pref_key_show_citybikes"
+            android:title="@string/pref_show_citybikes_title"
+            android:summary="@string/pref_show_citybikes_summary"
+            android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_cat_departures"

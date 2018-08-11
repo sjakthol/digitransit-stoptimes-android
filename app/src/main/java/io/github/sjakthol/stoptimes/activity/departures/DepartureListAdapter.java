@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import io.github.sjakthol.stoptimes.R;
+import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 
 import java.sql.Timestamp;
@@ -26,6 +27,11 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
      * The list of departures this adapter adapts.
      */
     private Vector<Departure> mDepartures;
+
+    /**
+     * The list of citybike statuses this adapter adapts.
+     */
+    private Vector<CitybikeStatus> mCitybikeStatuses;
 
     /**
      * The default text colors.
@@ -64,7 +70,15 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
     @Override
     public int getItemCount() {
-        return mDepartures == null ? 0 : mDepartures.size();
+        if (mDepartures == null && mCitybikeStatuses == null) {
+            return 0;
+        } else if (mDepartures != null) {
+            return mDepartures.size();
+        } else if (mCitybikeStatuses != null) {
+            return mCitybikeStatuses.size();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -77,6 +91,18 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Context ctx = holder.itemView.getContext();
+
+        // Save text colors before we start to modify them
+        maybeSaveTextColors(holder);
+
+        if (mDepartures != null) {
+            bindDeparture(holder, position, ctx);
+        } else if (mCitybikeStatuses != null) {
+            bindCitybikeStatus(holder, position, ctx);
+        }
+    }
+
+    private void bindDeparture(ViewHolder holder, int position, Context ctx) {
         Departure departure = mDepartures.elementAt(position);
 
         // Build the drawable avatar
@@ -114,14 +140,6 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
         holder.getTime().setText(leaves);
 
-        if (mDefaultPrimaryTextColors == null) {
-            mDefaultPrimaryTextColors = holder.getTime().getTextColors();
-        }
-
-        if (mDefaultSecondaryTextColors == null) {
-            mDefaultSecondaryTextColors = holder.getPlatform().getTextColors();
-        }
-
         // Highlight realtime departure times with a different color
         if (departure.isRealtime()) {
             int realtimeColor = ContextCompat.getColor(ctx, R.color.departure_realtime);
@@ -136,6 +154,48 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         }
     }
 
+    private void maybeSaveTextColors(ViewHolder holder) {
+        if (mDefaultPrimaryTextColors == null) {
+            mDefaultPrimaryTextColors = holder.getTime().getTextColors();
+        }
+
+        if (mDefaultSecondaryTextColors == null) {
+            mDefaultSecondaryTextColors = holder.getPlatform().getTextColors();
+        }
+    }
+
+    private void bindCitybikeStatus(ViewHolder holder, int position, Context ctx) {
+        CitybikeStatus status = mCitybikeStatuses.elementAt(position);
+
+        String availability = ctx.getResources().getString(
+            R.string.citybike_station_availability, status.getBikesAvailable(), status.getSpaces());
+
+        int stationAvailability = status.getStationAvailable() ?
+            R.string.citybike_status_active : R.string.citybike_status_inactive;
+
+        // Re-purpose existing text boxes & image view for this case
+        holder.getRoute().setImageResource(R.drawable.ic_bike);
+        holder.getHeadsign().setText(R.string.citybike_station);
+        holder.getPlatform().setText(stationAvailability);
+        holder.getTime().setText(availability);
+
+        // Make sure everything is visible
+        holder.getHeadsign().setVisibility(View.VISIBLE);
+        holder.getTime().setVisibility(View.VISIBLE);
+        holder.getPlatform().setVisibility(View.VISIBLE);
+
+        int color;
+        if (status.getBikesAvailable() > 5) {
+            color = ContextCompat.getColor(ctx, R.color.citybike_station_good);
+        } else if (status.getBikesAvailable() == 0) {
+            color = ContextCompat.getColor(ctx, R.color.citybike_station_none);
+        } else {
+            color = ContextCompat.getColor(ctx, R.color.citybike_station_few);
+        }
+
+        holder.getTime().setTextColor(color);
+    }
+
     /**
      * Set the departures for this adapter.
      *
@@ -143,6 +203,14 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
      */
     void setDepartureList(Vector<Departure> departures) {
         mDepartures = departures;
+        mCitybikeStatuses = null;
+        notifyDataSetChanged();
+    }
+
+    void setCitybikeStatus(CitybikeStatus status) {
+        mDepartures = null;
+        mCitybikeStatuses = new Vector<>();
+        mCitybikeStatuses.add(status);
         notifyDataSetChanged();
     }
 }

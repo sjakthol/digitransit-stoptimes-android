@@ -34,6 +34,7 @@ public class GetNearbyStopsTask extends QueryStopsDatabaseTask<Bundle> {
             " NATURAL LEFT JOIN " +
                 StopListContract.Stop.FAVORITES_TABLE_NAME +
         ") " +
+        " WHERE " + StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE + " != ? " +
         " ORDER BY distance_estimate " +
         " LIMIT ?";
 
@@ -51,13 +52,14 @@ public class GetNearbyStopsTask extends QueryStopsDatabaseTask<Bundle> {
         Bundle data = params[0];
         Location location = data.getParcelable(BUNDLE_LOCATION);
         String limit = data.getString(BUNDLE_LIMIT);
+        boolean citybikes = data.getBoolean(BUNDLE_CITYBIKES);
 
         Logger.i(TAG, "Fetching %s stops near %s", limit, location);
 
         String lat = String.valueOf(location.getLatitude());
         String lon = String.valueOf(location.getLongitude());
 
-        String[] args = {lat, lat, lon, lon, lat, lat, lon, lon, limit};
+        String[] args = {lat, lat, lon, lon, lat, lat, lon, lon, citybikes ? "" : "CITYBIKE_STATION", limit};
 
         return db.rawQuery(SQL_QUERY, args);
     }
@@ -67,11 +69,13 @@ public class GetNearbyStopsTask extends QueryStopsDatabaseTask<Bundle> {
      *
      * @param location the current user location
      * @param limit the number of results to show
+     * @param includeCitybikes whether to include citybike stations or not
      */
-    public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(Location location, String limit) {
+    public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(Location location, String limit, boolean includeCitybikes) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(BUNDLE_LOCATION, location);
         bundle.putString(BUNDLE_LIMIT, limit);
+        bundle.putBoolean(BUNDLE_CITYBIKES, includeCitybikes);
         return this.execute(bundle);
     }
 }

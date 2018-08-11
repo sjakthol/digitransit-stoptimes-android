@@ -6,6 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import io.github.sjakthol.stoptimes.utils.Logger;
@@ -73,7 +74,18 @@ public class DigitransitApi {
         "  stations {" +
         "    gtfsId, name, lat, lon, code, vehicleType, locationType, platformCode, parentStation { gtfsId }" +
         "  }" +
+        "  bikeRentalStations {" +
+        "    stationId, name, lat, lon" +
+        "  }" +
         "}";
+
+    private static final String QUERY_CITYBIKE_STATION_STATUS =
+        "query ($stationId: String!) {" +
+        "  bikeRentalStation(id: $stationId) {" +
+        "    bikesAvailable, spacesAvailable, state" +
+        "  }"+
+        "}";
+
 
     public static final short WAIT_TIMEOUT = 60;
 
@@ -138,6 +150,58 @@ public class DigitransitApi {
             } catch (JSONException e) {
                 listener.onDepartureLoadError(new VolleyError(e));
             }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(TAG, "Got error response", error);
+                Logger.d(TAG, error.toString());
+                listener.onDepartureLoadError(error);
+            }
+        });
+
+        req.setTag(ctx);
+
+        VolleyWrapper
+            .getInstance(ctx)
+            .getRequestQueue()
+            .add(req);
+    }
+
+    /**
+     * Fetch status of a citybike station.
+     *
+     * @param ctx app ctx
+     * @param stationId id of the station
+     * @param listener listener for results
+     * @throws JSONException if JSON cannot be constructed
+     */
+    public static void getCitybikeStationStatus(
+        final Context ctx,
+        final String stationId,
+        final DepartureResponseListener listener) throws JSONException
+    {
+        HashMap<String, String> vars = new HashMap<>();
+        vars.put("stationId", stationId);
+
+        JSONObject body = buildGraphQLQuery(QUERY_CITYBIKE_STATION_STATUS, vars);
+
+        Logger.i(TAG, "Fetching citybike station status for %s", stationId);
+        Logger.d(TAG, "%s", body);
+
+        JsonObjectRequest req = new JsonObjectRequest(API_GRAPHQL, body, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Logger.d(TAG, "Got successful response");
+                Logger.d(TAG, "%s", response);
+                try {
+                    JSONObject data = response.getJSONObject("data");
+                    JSONObject rawStatus = data.getJSONObject("bikeRentalStation");
+                    CitybikeStatus status = CitybikeStatus.fromJsonObject(rawStatus);
+                    listener.onCitybikeStatusAvailable(status);
+                } catch (JSONException e) {
+                    listener.onDepartureLoadError(new VolleyError(e));
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -224,5 +288,12 @@ public class DigitransitApi {
          * @param error an object containing the reason for failure
          */
         void onDepartureLoadError(VolleyError error);
+
+        /**
+         * Called when citybike station information is available.
+         *
+         * @param status status of the station
+         */
+        void onCitybikeStatusAvailable(CitybikeStatus status);
     }
 }

@@ -47,6 +47,7 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<Bundle> {
             " NATURAL LEFT JOIN " + StopListContract.Stop.FAVORITES_TABLE_NAME +
             " WHERE " + StopListContract.Stop.COLUMN_NAME_NAME + " LIKE ?" +
             ") " +
+            "WHERE " + StopListContract.Stop.COLUMN_NAME_LOCATION_TYPE + " != ? " +
             "ORDER BY " +
                 StopListContract.Stop.COLUMN_NAME_NAME +
             " LIMIT ?";
@@ -58,11 +59,12 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<Bundle> {
         String rawQuery = data.getString(BUNDLE_QUERY);
         String query = prepareQueryString(rawQuery);
         String limit = data.getString(BUNDLE_LIMIT);
+        boolean citybikes = data.getBoolean(BUNDLE_CITYBIKES);
 
         Logger.d(TAG, "Running query: query='%s', limit='%s'",
                 query, limit);
 
-        String[] selection = {query, query, limit};
+        String[] selection = {query, query, citybikes ? "" : "CITYBIKE_STATION", limit};
         return db.rawQuery(SQL_QUERY_STOPS, selection);
     }
 
@@ -85,11 +87,13 @@ public class QueryStopsTask extends QueryStopsDatabaseTask<Bundle> {
      *
      * @param query the query string
      * @param limit the number of results to show
+     * @param includeCitybikes whether to include citybikes or not
      */
-    public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(String query, String limit) {
+    public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(String query, String limit, boolean includeCitybikes) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_QUERY, query);
         bundle.putString(BUNDLE_LIMIT, limit);
+        bundle.putBoolean(BUNDLE_CITYBIKES, includeCitybikes);
         return this.execute(bundle);
     }
 }
