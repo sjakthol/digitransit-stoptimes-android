@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "io.github.sjakthol.stoptimes"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 6
         versionName "1.4.0"
 

@@ -56,7 +56,7 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
     }
 
     @Override
-    public Void runTask(SQLiteDatabase db, Void... _) {
+    public Void runTask(SQLiteDatabase db, Void... unused) {
         // Fetch stops
         Map<String, Vector<Stop>> data = this._fetchStops();
         Vector<Stop> stops = data.get("stops");

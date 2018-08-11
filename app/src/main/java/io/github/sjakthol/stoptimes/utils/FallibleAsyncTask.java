@@ -30,7 +30,7 @@ abstract public class FallibleAsyncTask<T, V> extends AsyncTask<T, Void, AsyncTa
         // Measure how long this task took.
         if (BuildConfig.DEBUG) {
             long delta = System.nanoTime() - mStart;
-            Logger.d(TAG, String.format("Task took %d ms", delta / 1000000));
+            Logger.d(TAG, "Task took %d ms", delta / 1000000);
         }
     }
 

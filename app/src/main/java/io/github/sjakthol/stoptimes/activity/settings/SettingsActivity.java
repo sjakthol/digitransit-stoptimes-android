@@ -72,7 +72,7 @@ public class SettingsActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode != 0) {
-            Logger.w(TAG, String.format("Unexpected request code %d", requestCode));
+            Logger.w(TAG, "Unexpected request code %d", requestCode);
             return;
         }
 
