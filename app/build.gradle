@@ -50,9 +50,6 @@ dependencies {
     // For discovering the user location
     implementation 'io.nlopez.smartlocation:library:3.2.4'
 
-    // For the bottom drawer
-    implementation 'com.roughike:bottom-bar:1.4.0'
-
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'com.android.support:support-annotations:27.1.1'
@@ -68,4 +65,5 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }

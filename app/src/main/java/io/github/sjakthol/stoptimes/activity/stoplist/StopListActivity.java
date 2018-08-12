@@ -7,13 +7,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabClickListener;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.generic.LoadingFragment;
 import io.github.sjakthol.stoptimes.activity.settings.SettingsActivity;
@@ -28,10 +28,9 @@ import io.github.sjakthol.stoptimes.utils.Logger;
  * An activity that displays a list of stops.
  */
 public class StopListActivity
-    extends StopListActivityBase implements OnMenuTabClickListener {
+    extends StopListActivityBase implements BottomNavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = StopListActivity.class.getSimpleName();
     private static final String BUNDLE_STOP_LIST_SOURCE = "BUNDLE_STOP_LIST_SOURCE";
-    private BottomBar mBottomBar;
 
     /**
      * List of possible sources for the stop list in this activity.
@@ -62,7 +61,7 @@ public class StopListActivity
         Logger.d(TAG, "Creating new StopListActivity");
 
         // Setup the bottom bar
-        setupBottomBar(savedInstanceState);
+        setupBottomBar();
 
     }
 
@@ -101,9 +100,6 @@ public class StopListActivity
         super.onSaveInstanceState(outState);
 
         outState.putSerializable(BUNDLE_STOP_LIST_SOURCE, mStopListSource);
-        if (mBottomBar != null) {
-            mBottomBar.onSaveInstanceState(outState);
-        }
     }
 
     @Override
@@ -201,23 +197,21 @@ public class StopListActivity
 
     /**
      * Sets up the bottom navigation bar. Should be called from onCreate().
-     *
-     * @param savedInstanceState the saved instance state
      */
-    private void setupBottomBar(Bundle savedInstanceState) {
-        mBottomBar = BottomBar.attach(this, savedInstanceState);
-        mBottomBar.setItems(R.menu.menu_stoplist_bottom);
-        mBottomBar.setOnMenuTabClickListener(this);
+    private void setupBottomBar() {
+        BottomNavigationView bottomBar = findViewById(R.id.navigation_bottom);
+        bottomBar.setOnNavigationItemSelectedListener(this);
+        bottomBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onMenuTabSelected(@IdRes int menuItemId) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (mIsStopped) {
             // Don't do anything if the activity is not running
-            return;
+            return false;
         }
 
-        switch (menuItemId) {
+        switch (item.getItemId()) {
             case R.id.bottom_favorites:
                 mStopListSource = StopListSource.FAVORITES;
                 break;
@@ -226,7 +220,7 @@ public class StopListActivity
                 if (!Helpers.shouldTrackLocation(this)) {
                     Logger.i(TAG, "Location disabled; showing message");
                     Helpers.snackbarWithAction(
-                        findViewById(R.id.stop_list_content),
+                        findViewById(R.id.snackbar_holder),
                         R.string.location_disabled,
                         R.string.settings,
                         new View.OnClickListener() {
@@ -239,7 +233,7 @@ public class StopListActivity
 
                     selectFavoritesTab();
 
-                    return;
+                    return false;
                 }
 
                 if (!getLocationController().state().locationServicesEnabled()) {
@@ -252,15 +246,12 @@ public class StopListActivity
 
         Logger.i(TAG, "Changing stop list source in %s", mStopListSource);
         updateStopListFragment();
+        return true;
     }
 
     private void selectFavoritesTab() {
-        mBottomBar.selectTabAtPosition(0, true);
-    }
-
-    @Override
-    public void onMenuTabReSelected(@IdRes int menuItemId) {
-        // No-op
+        BottomNavigationView bottomBar = findViewById(R.id.navigation_bottom);
+        bottomBar.setSelectedItemId(R.id.bottom_favorites);
     }
 
     /**

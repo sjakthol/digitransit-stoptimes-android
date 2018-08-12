@@ -3,11 +3,13 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.db.task.QueryStopsTask;
 import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
@@ -37,6 +39,9 @@ public class StopSearchActivity extends StopListActivityBase
         }
 
         showSearchExplanation();
+
+        BottomNavigationView bottomBar = findViewById(R.id.navigation_bottom);
+        bottomBar.setVisibility(View.GONE);
     }
 
     @Override
