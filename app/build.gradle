@@ -20,8 +20,8 @@ android {
         applicationId "io.github.sjakthol.stoptimes"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.5.1"
+        versionCode 9
+        versionName "1.5.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
