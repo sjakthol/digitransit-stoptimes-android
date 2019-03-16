@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.activity.departures;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
@@ -14,14 +15,20 @@ import io.github.sjakthol.stoptimes.activity.generic.LoadingFragment;
 import io.github.sjakthol.stoptimes.activity.generic.MessageFragment;
 import io.github.sjakthol.stoptimes.activity.generic.NoConnectionFragment;
 import io.github.sjakthol.stoptimes.activity.generic.UnexpectedErrorFragment;
+import io.github.sjakthol.stoptimes.db.StopListDatabaseHelper;
+import io.github.sjakthol.stoptimes.db.task.GetDepartureFiltersTask;
+import io.github.sjakthol.stoptimes.db.task.UpdateDepartureFilterTask;
 import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
 import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
+import io.github.sjakthol.stoptimes.digitransit.models.DepartureFilter;
+import io.github.sjakthol.stoptimes.utils.AsyncTaskResult;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
 import io.github.sjakthol.stoptimes.utils.VolleyWrapper;
 import org.json.JSONException;
 
+import java.util.HashSet;
 import java.util.Vector;
 
 public class DepartureListActivity extends BaseActivity implements
@@ -51,6 +58,7 @@ public class DepartureListActivity extends BaseActivity implements
      * The type of the stop (STOP vs STATION)
      */
     private String mLocationType;
+    private StopListDatabaseHelper mDatabaseHelper;
 
     public DepartureListActivity() {
         super(R.id.departure_list_content);
@@ -78,6 +86,24 @@ public class DepartureListActivity extends BaseActivity implements
 
         mStopId = getIntent().getStringExtra(EXTRA_STOP_ID);
         mLocationType = getIntent().getStringExtra(EXTRA_STOP_TYPE);
+
+        mDatabaseHelper = new StopListDatabaseHelper(this);
+
+        new GetDepartureFiltersTask(mDatabaseHelper) {
+            @Override
+            protected void onPostExecute(AsyncTaskResult<Cursor> res) {
+                super.onPostExecute(res);
+
+                if (!res.isSuccess()) {
+                    Logger.e(TAG, "Failed to load filters", res.getError());
+                    return;
+                }
+
+                Cursor result = res.getResult();
+                mDepartureList.setDepartureFiltersFromCursor(result);
+
+            }
+        }.execute(mStopId);
 
         // Update will be triggered by onResume()
     }
@@ -213,6 +239,13 @@ public class DepartureListActivity extends BaseActivity implements
     public void onDepartureUpdate() {
         Logger.i(TAG, "Update requested; performing it");
         updateDepartures();
+    }
+
+    @Override
+    public void onSaveDepartureFilters(HashSet<DepartureFilter> filters) {
+        Logger.i(TAG, "Got request to save departure filters; doing it.");
+
+        new UpdateDepartureFilterTask(mDatabaseHelper).execute(mStopId, filters);
     }
 
     /**

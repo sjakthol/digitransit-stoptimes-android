@@ -1,21 +1,26 @@
 package io.github.sjakthol.stoptimes.activity.departures;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import io.github.sjakthol.stoptimes.R;
+import io.github.sjakthol.stoptimes.digitransit.models.DepartureFilter;
 import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
+
+import static io.github.sjakthol.stoptimes.activity.departures.DepartureListActivity.EXTRA_STOP_ID;
+import static io.github.sjakthol.stoptimes.activity.departures.DepartureListActivity.EXTRA_STOP_TYPE;
 
 /**
  * A fragment that shows a list of departures from a Stop.
@@ -56,6 +61,8 @@ public class DepartureListFragment extends Fragment {
      * A handler used to dispatch the update runnable.
      */
     private Handler mHandler;
+
+    private boolean mEditFilterMode = false;
 
     public DepartureListFragment() {
         mAdapter = new DepartureListAdapter();
@@ -104,6 +111,8 @@ public class DepartureListFragment extends Fragment {
         recycler.setAdapter(mAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        setHasOptionsMenu(true);
+
         return layout;
     }
 
@@ -132,6 +141,44 @@ public class DepartureListFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        Logger.d(TAG, "Creating menu items");
+        inflater.inflate(R.menu.menu_departure_list, menu);
+
+        MenuItem edit = menu.findItem(R.id.action_edit_filters);
+        edit.setVisible(!getActivity().getIntent().getStringExtra(EXTRA_STOP_TYPE).equals("CITYBIKE_STATION"));
+
+        MenuItem save = menu.findItem(R.id.action_save);
+        save.setVisible(mEditFilterMode);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Logger.d(TAG, "onOptionsItemSelected()");
+        switch (item.getItemId()) {
+            case R.id.action_edit_filters:
+                mEditFilterMode = true;
+                mAdapter.setFilterUpdateMode(true);
+                getActivity().invalidateOptionsMenu();
+
+                return true;
+
+            case R.id.action_save:
+                mListener.onSaveDepartureFilters(mAdapter.getDepartureFilters());
+
+                mEditFilterMode = false;
+                mAdapter.setFilterUpdateMode(false);
+                getActivity().invalidateOptionsMenu();
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Update the departure list that is shown in this fragment.
      *
@@ -140,6 +187,25 @@ public class DepartureListFragment extends Fragment {
     void setDepartureList(Vector<Departure> departures) {
         Logger.i(TAG, "Changing departure list to %s", departures);
         mAdapter.setDepartureList(departures);
+    }
+
+    /**
+     * Update the departure list filters for the fragment.
+     *
+     * @param cursor cursor to read the filters from
+     */
+    void setDepartureFiltersFromCursor(Cursor cursor) {
+        Logger.i(TAG, "Found %d filters", cursor.getCount());
+        HashSet<DepartureFilter> f = new HashSet<>();
+        try {
+            while (cursor.moveToNext()) {
+                f.add(DepartureFilter.fromCursor(cursor));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        mAdapter.setDepartureFilters(f);
     }
 
     /**
@@ -193,5 +259,10 @@ public class DepartureListFragment extends Fragment {
          * Called when update is requested.
          */
         void onDepartureUpdate();
+
+        /**
+         * Called when departure filters need to be saved.
+         */
+        void onSaveDepartureFilters(HashSet<DepartureFilter> filters);
     }
 }

@@ -6,27 +6,45 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.digitransit.models.CitybikeStatus;
 import io.github.sjakthol.stoptimes.digitransit.models.Departure;
+import io.github.sjakthol.stoptimes.digitransit.models.DepartureFilter;
+import io.github.sjakthol.stoptimes.utils.Logger;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Vector;
 
 /**
  * An adapter for the departure list.
  */
 class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.ViewHolder> {
+    private static final String TAG = DepartureListAdapter.class.getSimpleName();
+
     /**
      * The list of departures this adapter adapts.
      */
     private Vector<Departure> mDepartures;
+    private Vector<Departure> mDeparturesAfterFiltering;
+
+    /**
+     * The set that contains all applied departure filters.
+     */
+    private HashSet<DepartureFilter> mDepartureFilters;
+
+    /**
+     * A flag for filter editing mode.
+     */
+    private boolean mEditFilterMode = false;
 
     /**
      * The list of citybike statuses this adapter adapts.
@@ -39,19 +57,26 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     private ColorStateList mDefaultPrimaryTextColors;
     private ColorStateList mDefaultSecondaryTextColors;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final CheckBox mFilterCheckbox;
         private final ImageView mRoute;
         private final TextView mHeadsign;
         private final TextView mPlatform;
         private final TextView mTime;
 
-        ViewHolder(View itemView) {
+        private final DepartureListAdapter mAdapter;
+
+        ViewHolder(View itemView, DepartureListAdapter adapter) {
             super(itemView);
 
-            mRoute = (ImageView) itemView.findViewById(R.id.departure_route);
-            mHeadsign = (TextView) itemView.findViewById(R.id.departure_headsign);
-            mTime = (TextView) itemView.findViewById(R.id.departure_time);
-            mPlatform = (TextView) itemView.findViewById(R.id.departure_platform);
+            mRoute = itemView.findViewById(R.id.departure_route);
+            mHeadsign = itemView.findViewById(R.id.departure_headsign);
+            mTime = itemView.findViewById(R.id.departure_time);
+            mPlatform = itemView.findViewById(R.id.departure_platform);
+            mFilterCheckbox = itemView.findViewById(R.id.departure_filter_checkbox);
+            mFilterCheckbox.setOnClickListener(this);
+
+            mAdapter = adapter;
         }
 
         ImageView getRoute() {
@@ -66,14 +91,20 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         TextView getPlatform() {
             return mPlatform;
         }
+        CheckBox getFilterCheckbox() {
+            return mFilterCheckbox;
+        }
+
+        @Override
+        public void onClick(View view) {
+            mAdapter.onFilterClicked(getAdapterPosition());
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (mDepartures == null && mCitybikeStatuses == null) {
-            return 0;
-        } else if (mDepartures != null) {
-            return mDepartures.size();
+        if (mDeparturesAfterFiltering != null) {
+            return mDeparturesAfterFiltering.size();
         } else if (mCitybikeStatuses != null) {
             return mCitybikeStatuses.size();
         } else {
@@ -85,7 +116,7 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_departure_list_item, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, this);
     }
 
     @Override
@@ -95,7 +126,7 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         // Save text colors before we start to modify them
         maybeSaveTextColors(holder);
 
-        if (mDepartures != null) {
+        if (mDeparturesAfterFiltering != null) {
             bindDeparture(holder, position, ctx);
         } else if (mCitybikeStatuses != null) {
             bindCitybikeStatus(holder, position, ctx);
@@ -103,7 +134,7 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     }
 
     private void bindDeparture(ViewHolder holder, int position, Context ctx) {
-        Departure departure = mDepartures.elementAt(position);
+        Departure departure = mDeparturesAfterFiltering.elementAt(position);
 
         // Build the drawable avatar
         int color = ContextCompat.getColor(ctx, departure.getRouteColor());
@@ -140,6 +171,15 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
 
         holder.getTime().setText(leaves);
 
+        if (mEditFilterMode) {
+            holder.getFilterCheckbox().setVisibility(View.VISIBLE);
+            holder.getFilterCheckbox().setChecked(doesDepartureMatchFilters(departure));
+            holder.getTime().setVisibility(View.GONE);
+        } else {
+            holder.getFilterCheckbox().setVisibility(View.GONE);
+            holder.getTime().setVisibility(View.VISIBLE);
+        }
+
         // Highlight realtime departure times with a different color
         if (departure.isRealtime()) {
             int realtimeColor = ContextCompat.getColor(ctx, R.color.departure_realtime);
@@ -152,6 +192,78 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
             holder.getHeadsign().setTextColor(mDefaultPrimaryTextColors);
             holder.getPlatform().setTextColor(mDefaultSecondaryTextColors);
         }
+    }
+
+
+    /**
+     * Notify the adapter about change in the filter state of given entry.
+     *
+     * @param adapterPosition the position that changed filter state
+     */
+    private void onFilterClicked(int adapterPosition) {
+        Departure d = mDeparturesAfterFiltering.get(adapterPosition);
+        Logger.d(TAG, "Filter checkbox was clicked (route=%s, headsign=%s)",
+                d.getRoute(), d.getHeadsign());
+
+        DepartureFilter f = DepartureFilter.fromDeparture(d);
+        if (mDepartureFilters.contains(f)) {
+            Logger.d(TAG, "Removing filter from filter set: %s", f);
+            mDepartureFilters.remove(f);
+        } else {
+            Logger.d(TAG, "Adding filter to filter set: %s", f);
+            mDepartureFilters.add(f);
+        }
+
+        mDeparturesAfterFiltering = getDeparturesAfterFiltering();
+
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Determine if given departure matches the current set of departure filters
+     *
+     * @param d the departure to check
+     * @return true if filters match the departure, false otherwise
+     */
+    private boolean doesDepartureMatchFilters(Departure d) {
+        for (DepartureFilter f : mDepartureFilters) {
+            if (f.matchesDeparture(d)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get those departures that match current filters.
+     *
+     * @return list of departures that match filters
+     */
+    private Vector<Departure> getDeparturesAfterFiltering() {
+        if (mEditFilterMode) {
+            // Filter aren't applied in the edit mode
+            return mDepartures;
+        }
+
+        if (mDepartureFilters == null || mDepartureFilters.size() == 0) {
+            // No filters --> show everything
+            return mDepartures;
+        }
+
+        if (mDepartures == null) {
+            // No departures defined so cannot filter them
+            return null;
+        }
+
+        Vector<Departure> deps = new Vector<>();
+        for (Departure d : mDepartures) {
+            if (doesDepartureMatchFilters(d)) {
+                deps.add(d);
+            }
+        }
+
+        return deps;
     }
 
     private void maybeSaveTextColors(ViewHolder holder) {
@@ -197,20 +309,55 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     }
 
     /**
+     * Fetch departures this view is holding onto.
+     *
+     * @return the vector of departures
+     */
+    Vector<Departure> getDepartures() {
+        return mDepartures;
+    }
+
+    /**
+     * Fetch departure filters this view is applying
+     *
+     * @return a set of departure filters
+     */
+    HashSet<DepartureFilter> getDepartureFilters() {
+        return mDepartureFilters;
+    }
+
+    /**
      * Set the departures for this adapter.
      *
      * @param departures the new list of Departures to show.
      */
     void setDepartureList(Vector<Departure> departures) {
         mDepartures = departures;
+        mDeparturesAfterFiltering = getDeparturesAfterFiltering();
+
         mCitybikeStatuses = null;
         notifyDataSetChanged();
     }
 
+    void setDepartureFilters(HashSet<DepartureFilter> filters) {
+        mDepartureFilters = filters;
+        mDeparturesAfterFiltering = getDeparturesAfterFiltering();
+        notifyDataSetChanged();
+    }
+
     void setCitybikeStatus(CitybikeStatus status) {
+        mDeparturesAfterFiltering = null;
+        mDepartureFilters = null;
         mDepartures = null;
+
         mCitybikeStatuses = new Vector<>();
         mCitybikeStatuses.add(status);
+        notifyDataSetChanged();
+    }
+
+    public void setFilterUpdateMode(boolean mode) {
+        mEditFilterMode = mode;
+        mDeparturesAfterFiltering = getDeparturesAfterFiltering();
         notifyDataSetChanged();
     }
 }

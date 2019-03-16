@@ -94,4 +94,8 @@
     <string name="citybike_status_inactive">Ei käytössä</string>
     <string name="pref_show_citybikes_title">Näytä kaupunkipyöräasemat</string>
     <string name="pref_show_citybikes_summary">Näytä kaupunkipyöräasemat pysäkkilistassa.</string>
+
+    <string name="action_edit_filters">Muokkaa linjasuodattimia</string>
+    <string name="action_save">Tallenna</string>
+
 </resources>

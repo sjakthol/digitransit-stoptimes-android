@@ -101,4 +101,6 @@
     <string name="pref_key_show_citybikes">show_citybikes</string>
     <string name="pref_show_citybikes_title">Show Citybike Stations</string>
     <string name="pref_show_citybikes_summary">Show citybike stations in the application.</string>
+    <string name="action_edit_filters">Edit Departure Filters</string>
+    <string name="action_save">Save</string>
 </resources>

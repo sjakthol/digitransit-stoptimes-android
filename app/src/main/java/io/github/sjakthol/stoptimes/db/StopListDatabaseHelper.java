@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class StopListDatabaseHelper extends SQLiteOpenHelper {
     private final String TAG = getClass().getSimpleName();
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "stops.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String REAL_TYPE = " REAL";
@@ -58,8 +58,6 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
             StopListContract.Stop.COLUMN_NAME_PARENT_STATION + TEXT_TYPE +
         " )";
 
-
-
     private static final String SQL_CREATE_FAVORITES_TABLE =
         "CREATE TABLE IF NOT EXISTS " + StopListContract.Stop.FAVORITES_TABLE_NAME + " (" +
             StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " PRIMARY KEY NOT NULL " + COMMA_SEP +
@@ -68,6 +66,12 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
                 StopListContract.Stop.STOPS_TABLE_NAME + "(" + StopListContract.Stop.COLUMN_NAME_GTFS_ID + ")" +
     " )";
 
+    private static final String SQL_CREATE_DEPARTURE_FILTERS_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + StopListContract.Stop.DEPARTURE_FILTERS_TABLE_NAME + " (" +
+                    StopListContract.Stop.COLUMN_NAME_GTFS_ID + TEXT_TYPE + " NOT NULL " + COMMA_SEP +
+                    StopListContract.Stop.COLUMN_NAME_ROUTE + TEXT_TYPE + " NOT NULL " + COMMA_SEP +
+                    StopListContract.Stop.COLUMN_NAME_HEADSIGN + TEXT_TYPE + " NOT NULL " +
+            " )";
     /**
      * Create a new StopListDatabaseHelper for the given application context.
      *
@@ -86,6 +90,7 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_STATIONS_TABLE);
         db.execSQL(SQL_CREATE_STOPS_TABLE);
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
+        db.execSQL(SQL_CREATE_DEPARTURE_FILTERS_TABLE);
     }
 
     @Override
@@ -98,6 +103,11 @@ public class StopListDatabaseHelper extends SQLiteOpenHelper {
 
             // ...and make it look like we just created the table
             this.onCreate(db);
+        }
+
+        if (oldVersion == 2 && newVersion == 3) {
+            // Add new table
+            db.execSQL(SQL_CREATE_DEPARTURE_FILTERS_TABLE);
         }
     }
 }

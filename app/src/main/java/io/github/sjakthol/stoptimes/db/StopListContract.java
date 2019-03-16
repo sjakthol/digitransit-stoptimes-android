@@ -18,7 +18,10 @@ public final class StopListContract {
         public static final String COLUMN_NAME_LOCATION_TYPE = "location_type";
         public static final String COLUMN_NAME_IS_FAVORITE = "is_favorite";
         public static final String COLUMN_NAME_PARENT_STATION = "parent_station";
+        public static final String COLUMN_NAME_ROUTE = "route";
+        public static final String COLUMN_NAME_HEADSIGN = "headsign";
         public static final String FAVORITES_TABLE_NAME = "favorites";
         public static final String STATIONS_TABLE_NAME = "stations";
+        public static final String DEPARTURE_FILTERS_TABLE_NAME = "departure_filters";
     }
 }

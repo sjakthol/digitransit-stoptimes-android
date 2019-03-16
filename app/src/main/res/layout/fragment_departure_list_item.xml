@@ -27,6 +27,14 @@
     </LinearLayout>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="11:22:33"
               android:id="@+id/departure_time" android:textSize="16sp"
+              android:visibility="gone"
               android:textAppearance="?android:attr/textAppearanceListItem" android:layout_weight="0"
               android:paddingRight="16dp"/>
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/departure_filter_checkbox"
+            android:layout_weight="0"
+            android:visibility="gone"
+            android:paddingRight="16dp"/>
 </LinearLayout>
