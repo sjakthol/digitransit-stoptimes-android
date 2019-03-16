@@ -15,7 +15,7 @@ public class CityBikeStation extends Stop {
      * @param lon the longitude of the stop position
      * @param is_favorite if this stop is favorite or not
      */
-    CityBikeStation(String id, String name, double lat, double lon, boolean is_favorite) {
+    private CityBikeStation(String id, String name, double lat, double lon, boolean is_favorite) {
         super(id, name, id, lat, lon, null, Stop.CITYBIKE_CODE, "CITYBIKE_STATION", null, is_favorite);
     }
 

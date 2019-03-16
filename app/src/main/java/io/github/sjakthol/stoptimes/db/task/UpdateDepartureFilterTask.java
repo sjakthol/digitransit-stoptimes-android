@@ -41,6 +41,7 @@ public class UpdateDepartureFilterTask extends DatabaseTask<Bundle, Void> {
         return this.execute(bundle);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Void runTask(SQLiteDatabase db, Bundle... params) {
         String stopId = params[0].getString(BUNDLE_STOP_ID);

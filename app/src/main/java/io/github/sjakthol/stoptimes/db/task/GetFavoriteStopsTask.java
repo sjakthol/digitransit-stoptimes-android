@@ -59,7 +59,7 @@ public class GetFavoriteStopsTask extends QueryStopsDatabaseTask<Bundle> {
      */
     public AsyncTask<Bundle, Void, AsyncTaskResult<Cursor>> execute(boolean includeCitybikes) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(BUNDLE_CITYBIKES, includeCitybikes);;
+        bundle.putBoolean(BUNDLE_CITYBIKES, includeCitybikes);
         return this.execute(bundle);
     }
 }

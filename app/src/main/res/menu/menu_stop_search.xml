@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activity.stoplist.StopListActivity">
-    <item android:id="@+id/menu_search"
-          android:title="@string/stoplist_search_hint"
-          app:actionViewClass="android.support.v7.widget.SearchView"
-          app:showAsAction="ifRoom"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.stoplist.StopListActivity">
+    <item
+        android:id="@+id/menu_search"
+        android:title="@string/stoplist_search_hint"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom" />
 </menu>

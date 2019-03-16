@@ -4,6 +4,7 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ public class StopListFragment extends Fragment {
     private Cursor mCursor;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Logger.d(TAG, "onCreateView()");
 
         View root = inflater.inflate(R.layout.fragment_stop_list, container, false);
@@ -42,7 +43,7 @@ public class StopListFragment extends Fragment {
         mAdapter.setUserLocation(activity.getLocation());
 
         // Setup the recycler
-        RecyclerView recycler = (RecyclerView) root.findViewById(R.id.stop_list_recycler);
+        RecyclerView recycler = root.findViewById(R.id.stop_list_recycler);
         recycler.setAdapter(mAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 

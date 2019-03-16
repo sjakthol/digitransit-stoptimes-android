@@ -1,57 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="io.github.sjakthol.stoptimes">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.github.sjakthol.stoptimes">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:allowBackup="true"
-            android:icon="@drawable/ic_app_icon"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+        android:allowBackup="true"
+        android:icon="@drawable/ic_app_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-                android:name=".activity.stoplist.StopListActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activity.stoplist.StopListActivity"
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-                android:name=".activity.departures.DepartureListActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activity.departures.DepartureListActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activity.stoplist.StopListActivity"/>
-        </activity>
-
-        <activity android:name=".activity.stoplist.StopSearchActivity"
-                  android:theme="@style/AppTheme.NoActionBar"
-                  android:windowSoftInputMode="stateUnspecified|adjustResize">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activity.stoplist.StopListActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.stoplist.StopListActivity" />
         </activity>
 
         <activity
-                android:name=".activity.settings.SettingsActivity"
-                android:label="@string/settings"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".activity.stoplist.StopSearchActivity"
+            android:windowSoftInputMode="stateUnspecified|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.stoplist.StopListActivity" />
+        </activity>
+
         <activity
-                android:name=".activity.update.StopDatabaseUpdateActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".activity.settings.SettingsActivity"
+            android:label="@string/settings" />
+        <activity
+            android:name=".activity.update.StopDatabaseUpdateActivity"
+            android:label="@string/app_name" />
+
         <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"
-                tools:replace="android:value"/>
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            tools:replace="android:value" />
     </application>
 
 </manifest>

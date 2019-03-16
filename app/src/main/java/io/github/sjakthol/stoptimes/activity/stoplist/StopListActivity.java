@@ -1,12 +1,12 @@
 package io.github.sjakthol.stoptimes.activity.stoplist;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
@@ -121,6 +121,7 @@ public class StopListActivity
         updateStopListFragment();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void updateStopListFragment() {
         Logger.i(TAG, "Updating stopListFragment with source='%s'", mStopListSource);
 
@@ -152,6 +153,7 @@ public class StopListActivity
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void updateNearbyStops(Location location) {
         new GetNearbyStopsTask(mDatabaseHelper) {
             @Override

@@ -1,40 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="60dp" android:gravity="center_vertical"
->
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center_vertical">
 
-    <ImageView android:layout_width="72dp" android:layout_height="fill_parent" android:id="@+id/departure_route"
-               android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="10dp"
-               android:paddingBottom="10dp"/>
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/departure_route"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp"
+        android:contentDescription="@string/departure_route_description"
+        android:paddingBottom="10dp" />
+
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" android:gravity="center_vertical">
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Westendinasema"
-                  android:id="@+id/departure_headsign" android:textSize="16sp"
-                  android:textAppearance="?android:attr/textAppearanceListItem"
-                  android:singleLine="true" android:ellipsize="end"/>
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical">
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Track 4"
-                android:id="@+id/departure_platform"
-                android:textSize="14sp" android:textColor="@color/secondary_text_default_material_light"
-        />
-    </LinearLayout>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="11:22:33"
-              android:id="@+id/departure_time" android:textSize="16sp"
-              android:visibility="gone"
-              android:textAppearance="?android:attr/textAppearanceListItem" android:layout_weight="0"
-              android:paddingRight="16dp"/>
-    <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/citybike_station"
+            android:id="@+id/departure_headsign"
+            android:textSize="16sp"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/departure_filter_checkbox"
-            android:layout_weight="0"
-            android:visibility="gone"
-            android:paddingRight="16dp"/>
+            android:text="@string/platform_code_train"
+            android:id="@+id/departure_platform"
+            android:textSize="14sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11:22:33"
+        android:id="@+id/departure_time"
+        android:textSize="16sp"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:layout_weight="0"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        tools:ignore="HardcodedText" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/departure_filter_checkbox"
+        android:layout_weight="0"
+        android:visibility="gone"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp" />
 </LinearLayout>

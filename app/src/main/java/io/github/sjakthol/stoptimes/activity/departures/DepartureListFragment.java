@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +17,8 @@ import io.github.sjakthol.stoptimes.digitransit.models.Departure;
 import io.github.sjakthol.stoptimes.utils.Logger;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Vector;
 
-import static io.github.sjakthol.stoptimes.activity.departures.DepartureListActivity.EXTRA_STOP_ID;
 import static io.github.sjakthol.stoptimes.activity.departures.DepartureListActivity.EXTRA_STOP_TYPE;
 
 /**
@@ -93,13 +92,13 @@ public class DepartureListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Logger.d(TAG, "onCreateView()");
         View layout = inflater.inflate(R.layout.fragment_departure_list, container, false);
 
         // Refresh support
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.departure_list_swipe_refresh);
+        mRefreshLayout = layout.findViewById(R.id.departure_list_swipe_refresh);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,7 +106,7 @@ public class DepartureListFragment extends Fragment {
             }
         });
 
-        RecyclerView recycler = (RecyclerView) layout.findViewById(R.id.departure_list_recycler);
+        RecyclerView recycler = layout.findViewById(R.id.departure_list_recycler);
         recycler.setAdapter(mAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 

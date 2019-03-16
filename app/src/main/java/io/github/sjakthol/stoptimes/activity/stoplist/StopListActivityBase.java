@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.activity.stoplist;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
@@ -45,7 +46,7 @@ public abstract class StopListActivityBase extends BaseActivity
      * The database helper to use for accessing the database.
      */
     StopListDatabaseHelper mDatabaseHelper;
-    StopListFragment mStopList;
+    private StopListFragment mStopList;
     boolean mIsStopped;
 
     /**
@@ -62,7 +63,7 @@ public abstract class StopListActivityBase extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_stop_list);
-        setToolbar(R.id.toolbar);
+        setToolbar();
 
         // Initialize the database connection
         mDatabaseHelper = new StopListDatabaseHelper(this);
@@ -139,6 +140,7 @@ public abstract class StopListActivityBase extends BaseActivity
         startActivity(i);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onFavoriteStatusChanged(Stop stop, boolean isFavorite) {
         Logger.i(TAG, "Stop %s favorite state changed to %b", stop.getId(), isFavorite);
@@ -178,7 +180,7 @@ public abstract class StopListActivityBase extends BaseActivity
      *
      * @param cursor the cursor to show
      */
-    void showStopList(@Nullable Cursor cursor) {
+    private void showStopList(@Nullable Cursor cursor) {
         Logger.i(TAG, "Showing StopList with cursor %s", cursor);
         if (!mStopList.isAdded()) {
             Logger.i(TAG, "Replacing content with the stop list");

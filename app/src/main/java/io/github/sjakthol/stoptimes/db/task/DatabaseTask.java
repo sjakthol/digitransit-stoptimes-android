@@ -41,5 +41,5 @@ abstract class DatabaseTask<T, V> extends FallibleAsyncTask<T, V> {
      *
      * @return cursor containing any query results
      */
-    abstract public V runTask(SQLiteDatabase db, T... params);
+    protected abstract V runTask(SQLiteDatabase db, T... params);
 }

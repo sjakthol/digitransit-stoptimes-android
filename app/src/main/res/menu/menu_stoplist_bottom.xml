@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activity.stoplist.StopListActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.stoplist.StopListActivity">
     <item
         android:id="@+id/bottom_favorites"
         android:title="@string/bottom_favorites"
-        android:icon="@drawable/ic_star"/>
+        android:icon="@drawable/ic_star" />
 
     <item
         android:id="@+id/bottom_nearby"
         android:title="@string/bottom_nearby"
-        android:icon="@drawable/ic_nearby"/>
+        android:icon="@drawable/ic_nearby" />
 </menu>

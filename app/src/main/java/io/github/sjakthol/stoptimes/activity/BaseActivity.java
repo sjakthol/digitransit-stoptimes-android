@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import io.github.sjakthol.stoptimes.utils.Logger;
  * A base activity that handles generic tasks all activities in this app needs. This
  * includes menu creation, fragmenStopListAdapter.ActionHandlert management etc.
  */
+@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -81,14 +83,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Set the resource with given ID as the action bar of the activity.
+     * Ensure toolbar is correctly set for the activity.
      *
-     * @param id and id for Toolbar resource
-     * @throws ClassCastException if resource matching the given ID is not a Toolbar
      */
-    protected void setToolbar(@IdRes int id) {
+    protected void setToolbar() {
         // Get the shared toolbar
-        Toolbar toolbar = (Toolbar) findViewById(id);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar == null) {
             Logger.w(TAG, "No toolbar present in the layout!");
             return;

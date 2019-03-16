@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -9,8 +10,10 @@ import com.android.volley.toolbox.Volley;
  * of the application lifetime.
  */
 public class VolleyWrapper {
+    @SuppressLint("StaticFieldLeak")
     private static VolleyWrapper mInstance;
     private static RequestQueue mRequestQueue;
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     private VolleyWrapper(Context ctx) {

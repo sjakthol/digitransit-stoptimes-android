@@ -9,7 +9,7 @@ public class DepartureFilter {
     private String mRoute;
     private String mHeadsign;
 
-    public DepartureFilter(String route, String headsign) {
+    private DepartureFilter(String route, String headsign) {
         mRoute = route;
         mHeadsign = headsign;
     }

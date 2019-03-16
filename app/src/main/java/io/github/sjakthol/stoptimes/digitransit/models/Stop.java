@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 public class Stop {
     private static final String TAG = Stop.class.getSimpleName();
-    protected static final int CITYBIKE_CODE = 99001;
+    static final int CITYBIKE_CODE = 99001;
     private final String mId;
     private final String mName;
     private final String mCode;

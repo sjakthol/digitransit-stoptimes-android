@@ -7,7 +7,6 @@
     </string>
 
     <string name="loading_default">Loading…</string>
-    <string name="loading_stops">Loading Stops…</string>
     <string name="loading_departures">Loading Departures…</string>
     <string name="loading_citybike_status">Loading Information…</string>
 
@@ -103,4 +102,5 @@
     <string name="pref_show_citybikes_summary">Show citybike stations in the application.</string>
     <string name="action_edit_filters">Edit Departure Filters</string>
     <string name="action_save">Save</string>
+    <string name="departure_route_description">Route</string>
 </resources>

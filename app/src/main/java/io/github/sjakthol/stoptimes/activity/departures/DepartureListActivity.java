@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.activity.departures;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -64,13 +65,14 @@ public class DepartureListActivity extends BaseActivity implements
         super(R.id.departure_list_content);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.d(TAG, "onCreate()");
 
         setContentView(R.layout.activity_stop_departures);
-        setToolbar(R.id.toolbar);
+        setToolbar();
 
         ActionBar toolbar = getSupportActionBar();
         if (toolbar != null) {

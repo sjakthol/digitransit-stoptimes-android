@@ -3,10 +3,10 @@ package io.github.sjakthol.stoptimes.activity.departures;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,15 +112,16 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_departure_list_item, parent, false);
         return new ViewHolder(v, this);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Context ctx = holder.itemView.getContext();
 
         // Save text colors before we start to modify them

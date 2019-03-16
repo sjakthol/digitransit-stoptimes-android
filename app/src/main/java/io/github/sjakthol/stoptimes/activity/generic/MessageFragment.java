@@ -43,7 +43,7 @@ public class MessageFragment extends Fragment {
      * @param title the title of the message
      * @param details the details of the message
      */
-    protected void setMessage(@StringRes int title, @StringRes int details) {
+    void setMessage(@StringRes int title, @StringRes int details) {
         assert getActivity() == null;
 
         Bundle args = new Bundle();
@@ -53,13 +53,13 @@ public class MessageFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_message, container, false);
 
-        TextView title = (TextView) root.findViewById(R.id.title);
-        TextView details = (TextView) root.findViewById(R.id.details);
+        TextView title = root.findViewById(R.id.title);
+        TextView details = root.findViewById(R.id.details);
 
         Bundle args = getArguments();
         title.setText(args.getInt(ARG_TITLE));

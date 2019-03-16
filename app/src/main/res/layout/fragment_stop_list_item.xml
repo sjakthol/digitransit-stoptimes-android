@@ -1,56 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="72dp" android:id="@+id/stop_list_item"
-              android:minHeight="?android:attr/listPreferredItemHeight"
-              android:clickable="true" android:focusable="true"
-              android:background="?android:attr/selectableItemBackground">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:id="@+id/stop_list_item"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
-            android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:id="@+id/stop_icon" android:contentDescription="@string/stop_list_item_icon_desc"
-            android:src="@drawable/ic_bus"
-            android:paddingLeft="16dp" android:paddingRight="16dp" android:layout_weight="0"/>
+        android:layout_width="72dp"
+        android:layout_height="match_parent"
+        android:id="@+id/stop_icon"
+        android:contentDescription="@string/stop_list_item_icon_desc"
+        android:src="@drawable/ic_bus"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_weight="0" />
+
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="16dp" android:gravity="center_vertical" android:layout_weight="1">
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_weight="1">
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/citybike_station"
+            android:id="@+id/stop_name"
+            android:textSize="16sp"
+            android:textAppearance="?android:attr/textAppearanceListItem" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stop Name"
-                android:id="@+id/stop_name" android:textSize="16sp"
-                android:textAppearance="?android:attr/textAppearanceListItem"/>
-        <LinearLayout
-                android:orientation="horizontal"
+                android:text="@string/stop_location_espoo"
+                android:id="@+id/stop_city"
+                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:text="E2223"
+                android:id="@+id/stop_code"
+                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:paddingLeft="4dp"
+                android:paddingStart="4dp"
+                android:paddingRight="4dp"
+                android:paddingEnd="4dp"
+                tools:ignore="HardcodedText" />
+
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="City"
-                    android:id="@+id/stop_city"
-                    android:textSize="14sp" android:textColor="@color/secondary_text_default_material_light"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="E2223"
-                    android:id="@+id/stop_code"
-                    android:textSize="14sp"
-                    android:paddingLeft="4dp"
-                    android:textColor="@color/secondary_text_default_material_light"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/stop_distance" android:textSize="14sp"
-                      android:textColor="@color/secondary_text_default_material_light" android:text="150m"
-                      android:paddingLeft="4dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stop_distance"
+                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:text="150m"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
     </LinearLayout>
+
     <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            style="?android:starStyle"
-            android:id="@+id/stop_favorite" android:paddingRight="16dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        style="?android:starStyle"
+        android:id="@+id/stop_favorite"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        tools:ignore="RtlSymmetry" />
 </LinearLayout>

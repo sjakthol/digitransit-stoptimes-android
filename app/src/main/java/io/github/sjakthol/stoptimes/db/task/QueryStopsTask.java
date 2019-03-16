@@ -2,7 +2,6 @@ package io.github.sjakthol.stoptimes.db.task;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;

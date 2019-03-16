@@ -19,6 +19,7 @@ package io.github.sjakthol.stoptimes.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 /**
@@ -36,8 +37,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 
     private DataSetObserver mDataSetObserver;
 
-    public CursorRecyclerViewAdapter(Context context, Cursor cursor) {
-        Context mContext = context;
+    protected CursorRecyclerViewAdapter(Context context, Cursor cursor) {
         mCursor = cursor;
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
@@ -72,10 +72,10 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         super.setHasStableIds(true);
     }
 
-    public abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
+    protected abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(@NonNull VH viewHolder, int position) {
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -101,7 +101,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
      * {@link #changeCursor(Cursor)}, the returned old Cursor is <em>not</em>
      * closed.
      */
-    public Cursor swapCursor(Cursor newCursor) {
+    private Cursor swapCursor(Cursor newCursor) {
         if (newCursor == mCursor) {
             return null;
         }

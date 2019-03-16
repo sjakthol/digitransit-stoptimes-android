@@ -9,7 +9,6 @@
     <string name="departure_now">Nyt</string>
     <string name="loading_default">Ladataan…</string>
     <string name="loading_departures">Ladataan lähtöjä…</string>
-    <string name="loading_stops">Ladataan pysäkkitietoja…</string>
     <string name="loading_citybike_status">Ladataan tietoja…</string>
     <string name="nca_details">Pysäkkiaikataulujen katseleminen vaatii verkkoyhteyden. Ota verkkoyhteys käyttöön
         laitteen asetuksista.
@@ -97,5 +96,6 @@
 
     <string name="action_edit_filters">Muokkaa linjasuodattimia</string>
     <string name="action_save">Tallenna</string>
+    <string name="departure_route_description">Reitti</string>
 
 </resources>

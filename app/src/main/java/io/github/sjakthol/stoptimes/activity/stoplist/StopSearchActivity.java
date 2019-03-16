@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.activity.stoplist;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -49,7 +50,7 @@ public class StopSearchActivity extends StopListActivityBase
         getMenuInflater().inflate(R.menu.menu_stop_search, menu);
 
         MenuItem search = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        SearchView searchView = (SearchView) search.getActionView();
         searchView.setOnCloseListener(this);
         searchView.setOnQueryTextListener(this);
 
@@ -95,6 +96,7 @@ public class StopSearchActivity extends StopListActivityBase
      *
      * @param query the search query
      */
+    @SuppressLint("StaticFieldLeak")
     private void performSearch(String query) {
         mQueryString = query;
 

@@ -1,10 +1,8 @@
 package io.github.sjakthol.stoptimes.activity.update;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.IdRes;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import io.github.sjakthol.stoptimes.R;
 import io.github.sjakthol.stoptimes.activity.BaseActivity;
@@ -34,7 +32,7 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_stop_database_update);
-        setToolbar(R.id.toolbar);
+        setToolbar();
 
         mDbHelper = new StopListDatabaseHelper(this);
 
@@ -56,6 +54,7 @@ public class StopDatabaseUpdateActivity extends BaseActivity implements NoConnec
         setFragment(frag, FRAG_LOADING);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void startUpdate() {
         Logger.i(TAG, "Starting update");
         showLoadingIndicator();

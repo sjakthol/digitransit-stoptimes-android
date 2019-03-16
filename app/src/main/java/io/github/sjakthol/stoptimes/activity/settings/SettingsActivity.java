@@ -28,7 +28,7 @@ public class SettingsActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
-        setToolbar(R.id.toolbar);
+        setToolbar();
 
         // Display the fragment as the main content.
         replaceSettingsFragment();

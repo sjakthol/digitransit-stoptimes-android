@@ -3,21 +3,8 @@ package io.github.sjakthol.stoptimes.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
-import com.android.volley.NoConnectionError;
-import com.android.volley.toolbox.RequestFuture;
-import io.github.sjakthol.stoptimes.BuildConfig;
-import io.github.sjakthol.stoptimes.digitransit.DigitransitApi;
-import io.github.sjakthol.stoptimes.utils.NetworkRequiredException;
 import io.github.sjakthol.stoptimes.utils.Helpers;
 import io.github.sjakthol.stoptimes.utils.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * A helper for accessing the stop list database.

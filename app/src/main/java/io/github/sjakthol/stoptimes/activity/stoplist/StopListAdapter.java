@@ -3,6 +3,7 @@ package io.github.sjakthol.stoptimes.activity.stoplist;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,13 +88,13 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
         ViewHolder(View view) {
             super(view);
 
-            mStopIcon = (ImageView) view.findViewById(R.id.stop_icon);
-            mFavoriteCheckbox = (CheckBox) view.findViewById(R.id.stop_favorite);
+            mStopIcon = view.findViewById(R.id.stop_icon);
+            mFavoriteCheckbox = view.findViewById(R.id.stop_favorite);
 
-            mStopName = (TextView) view.findViewById(R.id.stop_name);
-            mStopCode = (TextView) view.findViewById(R.id.stop_code);
-            mStopCity = (TextView) view.findViewById(R.id.stop_city);
-            mDistance = (TextView) view.findViewById(R.id.stop_distance);
+            mStopName = view.findViewById(R.id.stop_name);
+            mStopCode = view.findViewById(R.id.stop_code);
+            mStopCity = view.findViewById(R.id.stop_city);
+            mDistance = view.findViewById(R.id.stop_distance);
 
             getFavoriteCheckbox().setOnCheckedChangeListener(this);
             getRootView().setOnClickListener(this);
@@ -155,8 +156,9 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater
             .from(parent.getContext())
             .inflate(R.layout.fragment_stop_list_item, parent, false);

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_edit_filters"
-          android:title="@string/action_edit_filters"/>
-    <item android:id="@+id/action_save"
-          android:title="@string/action_save"
-          android:icon="@drawable/ic_done_black"
-          app:iconTint="@android:color/white"
-          android:visible="false"
-          app:showAsAction="always"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_edit_filters"
+        android:title="@string/action_edit_filters" />
+    <item
+        android:id="@+id/action_save"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_done_black"
+        app:iconTint="@android:color/white"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>

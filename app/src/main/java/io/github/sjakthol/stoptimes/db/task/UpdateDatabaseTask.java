@@ -1,5 +1,6 @@
 package io.github.sjakthol.stoptimes.db.task;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static io.github.sjakthol.stoptimes.db.StopListContract.Stop.COLUMN_NAME_GTFS_ID;
-import static io.github.sjakthol.stoptimes.db.StopListContract.Stop.STOPS_TABLE_NAME;
 
 /**
  * A task that updates the contents of the stop list database.
  */
+@SuppressLint("StaticFieldLeak")
 public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
     private static final String TAG = UpdateDatabaseTask.class.getSimpleName();
     private static final String TEMP_TABLE_NAME = "NEW_STOPS";
@@ -148,7 +149,7 @@ public class UpdateDatabaseTask extends DatabaseTask<Void, Void> {
      * @return a Vector of parsed Stop objects
      * @throws JSONException if JSON cannot be parsed
      */
-    public static Vector<Stop> parseCitybikeStationList(JSONArray stops) throws JSONException {
+    private static Vector<Stop> parseCitybikeStationList(JSONArray stops) throws JSONException {
         int numstops = stops.length();
         Vector<Stop> result = new Vector<>(numstops);
         for (int i = 0; i < stops.length(); i++) {
