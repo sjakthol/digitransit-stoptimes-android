@@ -103,4 +103,5 @@
     <string name="action_edit_filters">Edit Departure Filters</string>
     <string name="action_save">Save</string>
     <string name="departure_route_description">Route</string>
+    <string name="action_toggle_filters">Enable / Disable Filters</string>
 </resources>

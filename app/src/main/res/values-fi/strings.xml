@@ -97,5 +97,7 @@
     <string name="action_edit_filters">Muokkaa linjasuodattimia</string>
     <string name="action_save">Tallenna</string>
     <string name="departure_route_description">Reitti</string>
+    <string name="action_toggle_filters">Suodata / Näytä kaikki</string>
+
 
 </resources>

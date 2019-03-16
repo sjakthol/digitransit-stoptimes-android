@@ -10,5 +10,11 @@
         android:icon="@drawable/ic_done_black"
         app:iconTint="@android:color/white"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_toggle_filters"
+        android:title="@string/action_toggle_filters"
+        android:icon="@drawable/ic_filter_list"
+        app:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
 </menu>

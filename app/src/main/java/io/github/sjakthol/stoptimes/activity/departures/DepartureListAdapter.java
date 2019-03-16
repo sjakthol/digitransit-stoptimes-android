@@ -42,8 +42,9 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
     private HashSet<DepartureFilter> mDepartureFilters;
 
     /**
-     * A flag for filter editing mode.
+     * A flags for filters.
      */
+    private boolean mAreFiltersEnabled = true;
     private boolean mEditFilterMode = false;
 
     /**
@@ -242,8 +243,8 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
      * @return list of departures that match filters
      */
     private Vector<Departure> getDeparturesAfterFiltering() {
-        if (mEditFilterMode) {
-            // Filter aren't applied in the edit mode
+        if (mEditFilterMode || !mAreFiltersEnabled) {
+            // Filter aren't applied in the edit mode or when they are disabled
             return mDepartures;
         }
 
@@ -262,6 +263,11 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
             if (doesDepartureMatchFilters(d)) {
                 deps.add(d);
             }
+        }
+
+        if (deps.isEmpty()) {
+            // Show all departures filters would've excluded them all
+            return mDepartures;
         }
 
         return deps;
@@ -356,8 +362,14 @@ class DepartureListAdapter extends RecyclerView.Adapter<DepartureListAdapter.Vie
         notifyDataSetChanged();
     }
 
-    public void setFilterUpdateMode(boolean mode) {
+    void setFilterUpdateMode(boolean mode) {
         mEditFilterMode = mode;
+        mDeparturesAfterFiltering = getDeparturesAfterFiltering();
+        notifyDataSetChanged();
+    }
+
+    void toggleFilters() {
+        mAreFiltersEnabled = !mAreFiltersEnabled;
         mDeparturesAfterFiltering = getDeparturesAfterFiltering();
         notifyDataSetChanged();
     }

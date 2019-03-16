@@ -152,6 +152,9 @@ public class DepartureListFragment extends Fragment {
 
         MenuItem save = menu.findItem(R.id.action_save);
         save.setVisible(mEditFilterMode);
+
+        MenuItem toggle = menu.findItem(R.id.action_toggle_filters);
+        toggle.setVisible(!mAdapter.getDepartureFilters().isEmpty());
     }
 
     @Override
@@ -172,6 +175,10 @@ public class DepartureListFragment extends Fragment {
                 mAdapter.setFilterUpdateMode(false);
                 getActivity().invalidateOptionsMenu();
 
+                return true;
+
+            case R.id.action_toggle_filters:
+                mAdapter.toggleFilters();
                 return true;
         }
 
@@ -205,6 +212,10 @@ public class DepartureListFragment extends Fragment {
         }
 
         mAdapter.setDepartureFilters(f);
+        if (getActivity() != null) {
+            // Invalidate menus to ensure toggle button is visible if we found some filters
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
     /**
