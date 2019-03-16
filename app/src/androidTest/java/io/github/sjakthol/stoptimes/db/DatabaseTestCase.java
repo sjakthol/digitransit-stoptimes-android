@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
-import android.test.InstrumentationTestCase;
 import org.junit.After;
 import org.junit.Before;
 

@@ -2,8 +2,6 @@ package io.github.sjakthol.stoptimes.digitransit.models;
 
 import org.junit.Test;
 
-import java.sql.Timestamp;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
