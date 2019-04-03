@@ -147,14 +147,16 @@ public class DepartureListFragment extends Fragment {
         Logger.d(TAG, "Creating menu items");
         inflater.inflate(R.menu.menu_departure_list, menu);
 
+        boolean isCityBikeStation = getActivity().getIntent().getStringExtra(EXTRA_STOP_TYPE).equals("CITYBIKE_STATION");
+
         MenuItem edit = menu.findItem(R.id.action_edit_filters);
-        edit.setVisible(!getActivity().getIntent().getStringExtra(EXTRA_STOP_TYPE).equals("CITYBIKE_STATION"));
+        edit.setVisible(!isCityBikeStation);
 
         MenuItem save = menu.findItem(R.id.action_save);
         save.setVisible(mEditFilterMode);
 
         MenuItem toggle = menu.findItem(R.id.action_toggle_filters);
-        toggle.setVisible(!mAdapter.getDepartureFilters().isEmpty());
+        toggle.setVisible(!isCityBikeStation && !mAdapter.getDepartureFilters().isEmpty());
     }
 
     @Override
