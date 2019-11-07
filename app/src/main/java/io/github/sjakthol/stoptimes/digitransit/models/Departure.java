@@ -59,7 +59,7 @@ public final class Departure {
         long realtime = obj.getLong("realtimeDeparture");
 
         JSONObject stopInfo = obj.getJSONObject("stop");
-        String platform = stopInfo.getString("platformCode");
+        String platform = stopInfo.optString("platformCode", null);
 
         return new Departure(
             route.getString("shortName"),

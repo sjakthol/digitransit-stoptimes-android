@@ -178,7 +178,7 @@ class StopListAdapter extends CursorRecyclerViewAdapter<StopListAdapter.ViewHold
         // Format the stop name with the platform/track information
         viewHolder.getStopName().setText(stop.formatStopName(viewHolder.getRootView().getResources()));
 
-        if (stop.getCode().equals("null")) {
+        if (stop.getCode().equals("null") || stop.getCode().equals("")) {
             // The stop doesn't have a code which means we cannot
             // determine the city it resides in.
 
